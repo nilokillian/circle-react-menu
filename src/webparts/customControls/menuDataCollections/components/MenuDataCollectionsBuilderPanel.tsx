@@ -93,7 +93,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
   };
 
   const onUpdate = () => {
-    console.log("onUpdate");
+    console.log("onUpdate1");
   };
 
   const onAddToCollection = (
