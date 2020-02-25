@@ -1,0 +1,127 @@
+.menuItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 6em;
+  width: 6em;
+  margin: -3em;
+  text-align: center;
+  display: flex;
+  border-radius: 50%;
+  box-shadow: 10px 10px 10px -11px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  i {
+    color: white;
+    font-size: 2em;
+    display: flex;
+    margin: auto;
+    transition: font-size 0.1s ease-out;
+  }
+
+  &:hover {
+    height: 7em;
+    width: 7em;
+    margin: -3.5em;
+
+    i {
+      font-size: 2.5em;
+    }
+  }
+}
+
+.itemShow {
+  opacity: 1;
+  transition: height 0.1s ease-out, width 0.1s ease-out, margin 0.1s ease-out,
+    opacity 0.5s ease-out;
+}
+
+.itemHide {
+  opacity: 0;
+}
+
+.menuBackground {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 100;
+  background-color: #f0e8d1;
+}
+
+.buttonBg {
+  position: relative;
+  height: 18em;
+  width: 18em;
+  border-radius: 50%;
+  margin: 1.75em auto 0;
+  z-index: 1000;
+  top: 50%;
+  margin-top: -9em;
+}
+
+.menuToggle {
+  position: absolute;
+  z-index: 2000;
+  margin-top: 2em;
+  margin-left: 2em;
+  height: 6em;
+  width: 6em;
+  border-radius: 50%;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+
+  i {
+    font-size: 20px;
+  }
+}
+
+.toggleOpen {
+  border: 3px solid #353535;
+  color: #353535;
+  top: 50%;
+  left: 50%;
+  margin-top: -3em;
+  margin-left: -3em;
+  animation: fadeIn 1s 1 ease-in;
+}
+
+.toggleClosed {
+  border: 3px solid white;
+  color: white;
+}
+
+.menuWrapperOpen {
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.2s ease-out;
+}
+
+.menuWrapperClosed {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-out;
+}
+
+.animateMenu {
+  animation: spin 1.3s 1 cubic-bezier(0.175, 0.585, 0.08, 1.2);
+  animation-delay: 0.2s;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

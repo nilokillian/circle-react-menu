@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "circle-menu-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/circleMenu/CircleMenuWebPart.js",
+          "manifest": "./src/webparts/circleMenu/CircleMenuWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "CircleMenuWebPartStrings": "lib/webparts/circleMenu/loc/{locale}.js",
+    "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js"
+  }
+}

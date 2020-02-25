@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "circle-menu-webpart-client-side-solution",
+    "id": "1ddd3801-4f46-4b1e-aa08-d3b97f0770e0",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false
+  },
+  "paths": {
+    "zippedPackage": "solution/circle-menu-webpart.sppkg"
+  }
+}
