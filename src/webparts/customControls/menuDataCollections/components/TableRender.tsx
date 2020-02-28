@@ -1,26 +1,12 @@
 import * as React from "react";
 import styles from "../styles/MenuDataCollection.module.scss";
-import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import {
-  ICurrentDataCollection,
-  IDataCollections
-} from "./MenuDataCollectionsBuilderPanel";
-import { ID } from "../utils/generateId";
-
-export interface ITableRenderProps {
-  level: number;
-  fields: any[];
-  dataCollections: IDataCollections[];
-  currentDataCollection: ICurrentDataCollection;
-  onCurrentDataCollectionChange: (value: ICurrentDataCollection) => void;
-  onAddToCollection: (collection: ICurrentDataCollection, lvl: number) => void;
-  onCustomFieldUpdate: () => void;
-  containerToggle: (
-    value: string,
-    parentUniqueId: string,
-    titleValue: string
-  ) => void;
-}
+  TextField,
+  Checkbox,
+  IconButton,
+  IColor
+} from "office-ui-fabric-react";
+import { ITableRenderProps } from "../interfaces/ITableRenderProps";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   dataCollections,
@@ -30,7 +16,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   onCurrentDataCollectionChange,
   onAddToCollection,
   onCustomFieldUpdate,
-  containerToggle
+  toggleContainer
 }) => {
   const onTextFieldChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -39,6 +25,13 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     const fielId = event.target["name"];
 
     currentDataCollection[fielId].value = newValue;
+    onCurrentDataCollectionChange({ ...currentDataCollection });
+  };
+
+  const onCustomFieldChange = (field: string, colorObj: string) => {
+    console.log("colorObj", colorObj, "field", field);
+    // const fielId = event.target["name"];
+    currentDataCollection[field].value = colorObj;
     onCurrentDataCollectionChange({ ...currentDataCollection });
   };
 
@@ -89,7 +82,13 @@ export const TableRender: React.FC<ITableRenderProps> = ({
             case "custom":
               return (
                 <span className={`${styles.tableCell} ${styles.inputField}`}>
-                  {field.onCustomRender(field.id, "value", onCustomFieldUpdate)}
+                  {field.onCustomRender(
+                    field.id,
+                    currentDataCollection[field.id]
+                      ? (currentDataCollection[field.id].value as string)
+                      : "#ffffff",
+                    onCustomFieldChange
+                  )}
                 </span>
               );
           }
@@ -158,7 +157,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
             <IconButton
               iconProps={{ iconName: "WebAppBuilderFragment" }}
               onClick={() =>
-                containerToggle(
+                toggleContainer(
                   "firstLvl",
                   data.relationId,
                   data.fields["title"].value as string

@@ -5,10 +5,8 @@ import {
   PropertyPaneFieldType,
   IPropertyPaneCustomFieldProps
 } from "@microsoft/sp-property-pane";
-import {
-  MenuDataCollectionsBuilderPanel,
-  IMenuDataCollectionsBuilderPanelProps
-} from "./components/MenuDataCollectionsBuilderPanel";
+import { MenuDataCollectionsBuilderPanel } from "./components/MenuDataCollectionsBuilderPanel";
+import { IMenuDataCollectionsBuilderPanelProps } from "./interfaces/IMenuDataCollectionsBuilderPanelProps";
 
 export const CustomMenuDataCollectionFieldType = {
   boolean: "checkbox",
@@ -31,6 +29,7 @@ export interface IPropertyMenuDataCollectionsFields {
 export interface IPropertyMenuDataCollectionsProps {
   key: string;
   panelHeaderTitle: string;
+  calloutButtonTitle: string;
   value: any[];
   fields: IPropertyMenuDataCollectionsFields[];
   customRender?: (
@@ -60,6 +59,7 @@ export class PropertyMenuDataCollections
     this.properties = {
       key: properties.key,
       panelHeaderTitle: properties.panelHeaderTitle,
+      calloutButtonTitle: properties.calloutButtonTitle,
       value: properties.value,
       fields: properties.fields,
       onProppertyChange: properties.onProppertyChange,
@@ -81,6 +81,7 @@ export class PropertyMenuDataCollections
       {
         key: this.properties.key,
         label: this.properties.panelHeaderTitle,
+        btnLabel: this.properties.calloutButtonTitle,
         value: this.properties.value,
         fields: this.properties.fields,
         onChanged: this.onChanged.bind(this)

@@ -1,31 +1,14 @@
 import * as React from "react";
-import { IPropertyMenuDataCollectionsFields } from "../propertyMenuDataCollections";
-import {
-  ICurrentDataCollection,
-  IDataCollections
-} from "./MenuDataCollectionsBuilderPanel";
 import { TableRender } from "./TableRender";
 import { ID } from "../utils/generateId";
+import { initInputForm } from "../utils/initInputForm";
+import { ISubLevelBuilderProps } from "../interfaces/ISubLevelBuilderProps";
+import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
 
-export interface IFirstLevelBuilderProps {
-  fields: IPropertyMenuDataCollectionsFields[];
-  dataCollections: IDataCollections[];
-  containerToggle: (
-    value: string,
-    parentUniqueId: string,
-    titleValue: string
-  ) => void;
-  onAddToCollection: (
-    collection: ICurrentDataCollection,
-    lvl: number,
-    uniqueId: string
-  ) => void;
-}
-
-export const FirstLevelBuilder: React.FC<IFirstLevelBuilderProps> = ({
+export const FirstLevelBuilder: React.FC<ISubLevelBuilderProps> = ({
   fields,
   dataCollections,
-  containerToggle,
+  toggleContainer,
   onAddToCollection
 }): JSX.Element => {
   const [currentDataCollection, setCurrentDataCollection] = React.useState<
@@ -33,27 +16,8 @@ export const FirstLevelBuilder: React.FC<IFirstLevelBuilderProps> = ({
   >({} as ICurrentDataCollection);
 
   React.useEffect(() => {
-    initInputForm();
+    setCurrentDataCollection(initInputForm(fields));
   }, []);
-
-  const initInputForm = (): void => {
-    let obj;
-
-    fields.map(f => {
-      const key = f.id;
-      obj = {
-        ...obj,
-        [key]: {
-          value: f.type === "checkbox" ? false : "",
-          uniqueId: ID(),
-          relationId: "",
-          type: f.type
-        }
-      };
-    });
-
-    setCurrentDataCollection(obj);
-  };
 
   return (
     <TableRender
@@ -65,11 +29,11 @@ export const FirstLevelBuilder: React.FC<IFirstLevelBuilderProps> = ({
       }}
       onAddToCollection={() => {
         onAddToCollection(currentDataCollection, 1, ID());
-        initInputForm();
+        setCurrentDataCollection(initInputForm(fields));
       }}
       onCustomFieldUpdate={null}
       dataCollections={dataCollections}
-      containerToggle={containerToggle}
+      toggleContainer={toggleContainer}
     />
   );
 };

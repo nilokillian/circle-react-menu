@@ -4,47 +4,16 @@ import {
   PanelType,
   DefaultButton,
   PrimaryButton,
-  FocusZone,
-  FocusZoneDirection,
   IconButton,
   Separator
 } from "office-ui-fabric-react";
-
 import styles from "../styles/MenuDataCollection.module.scss";
-import {
-  IPropertyMenuDataCollectionsFields,
-  CustomMenuDataCollectionFieldType
-} from "../propertyMenuDataCollections";
 import { FirstLevelBuilder } from "./FirstLevelBuilder";
 import { SecondLevelBuilder } from "./SecondLevelBuilder";
-
-export interface IMenuDataCollectionsBuilderPanelProps {
-  key: string;
-  label: string;
-  value: any[];
-  fields: IPropertyMenuDataCollectionsFields[];
-  onChanged: () => void;
-}
-
-export interface IDataCollections {
-  fields: ICurrentDataCollection;
-  relationId?: string;
-  level: number;
-}
-
-export interface ICurrentDataCollection {
-  [key: string]: {
-    value: string | boolean;
-    uniqueId: string;
-    type: string;
-  };
-}
-
-export interface IContaners {
-  firstLvl: boolean;
-  secondLvl: boolean;
-  thirdLvl: boolean;
-}
+import { IMenuDataCollectionsBuilderPanelProps } from "../interfaces/IMenuDataCollectionsBuilderPanelProps";
+import { IDataCollections } from "../interfaces/IDataCollections";
+import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
+import { IContaners } from "../interfaces/IContaners";
 
 export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuilderPanelProps> = (
   props
@@ -60,12 +29,8 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
   const [dataCollections, setDataCollections] = React.useState<
     IDataCollections[]
   >([]);
-  const openPanel = () => setIsOpen(true);
-  const dismissPanel = () => {
-    setIsOpen(false);
-  };
 
-  const containerToggle = (
+  const toggleContainer = (
     contName: string,
     parentUniqueId: string,
     titleValue: string
@@ -100,14 +65,15 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     currentDataCollection: ICurrentDataCollection,
     level: number,
     uniqueId: string
-  ) => {
-    let obj = {
-      fields: currentDataCollection,
-      relationId: uniqueId,
-      level: level
-    } as IDataCollections;
-
-    setDataCollections([...dataCollections, obj]);
+  ): void => {
+    setDataCollections([
+      ...dataCollections,
+      {
+        fields: currentDataCollection,
+        relationId: uniqueId,
+        level: level
+      } as IDataCollections
+    ]);
   };
 
   const onRenderHeader = (): JSX.Element => {
@@ -134,10 +100,10 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
 
   return (
     <div>
-      <DefaultButton text="Standard" onClick={openPanel} />
+      <DefaultButton text={props.btnLabel} onClick={() => setIsOpen(true)} />
       <Panel
         isOpen={isOpen}
-        onDismiss={dismissPanel}
+        onDismiss={() => setIsOpen(false)}
         type={PanelType.large}
         closeButtonAriaLabel="Close"
         onRenderHeader={onRenderHeader}
@@ -148,7 +114,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
             <FirstLevelBuilder
               fields={props.fields}
               dataCollections={dataCollections.filter(d => d.level === 1)}
-              containerToggle={containerToggle}
+              toggleContainer={toggleContainer}
               onAddToCollection={onAddToCollection}
             />
           )}
@@ -159,7 +125,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
               dataCollections={dataCollections.filter(
                 d => d.level === 2 && d.relationId === parentUniqueId
               )}
-              containerToggle={containerToggle}
+              toggleContainer={toggleContainer}
               onAddToCollection={onAddToCollection}
             />
           )}
@@ -169,7 +135,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
               onClick={() => getContainerTitle()}
               styles={{ root: { marginRight: 15 } }}
             />
-            <DefaultButton text="Cancel" onClick={dismissPanel} />
+            <DefaultButton text="Cancel" onClick={() => setIsOpen(false)} />
           </div>
         </div>
       </Panel>

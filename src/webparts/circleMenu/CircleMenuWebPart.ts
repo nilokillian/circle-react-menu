@@ -15,10 +15,7 @@ import {
   PropertyFieldCollectionData,
   CustomCollectionFieldType
 } from "@pnp/spfx-property-controls/lib/PropertyFieldCollectionData";
-import {
-  getColourPickerJSXElement,
-  getSubMenuCheckBoxJSXElement
-} from "./utils/getJSX";
+import { getColourPickerJSXElement } from "./utils/getJSX";
 import {
   PropertyMenuDataCollections,
   CustomMenuDataCollectionFieldType
@@ -74,57 +71,58 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
             {
               groupName: "Menu builder settings",
               groupFields: [
-                PropertyFieldCollectionData("firstLvlMenuItems", {
-                  key: "firstLvlMenuItems",
-                  label: "",
-                  panelHeader: "Create top level menu items",
-                  manageBtnLabel: "1st level menu",
-                  panelDescription:
-                    "Look up for icons  : https://developer.microsoft.com/en-us/fabric#/styles/web/icons",
-                  value: this.properties.firstLvlMenuItems,
-                  fields: [
-                    {
-                      id: "title",
-                      title: "Title",
-                      type: CustomCollectionFieldType.string,
-                      required: true
-                    },
-                    {
-                      id: "icon",
-                      title: "Icon",
-                      type: CustomCollectionFieldType.string
-                    },
-                    {
-                      id: "hasSubMenu",
-                      title: "Has sub-menu ?",
-                      type: CustomCollectionFieldType.boolean
-                    },
-                    {
-                      id: "color",
-                      title: "Color",
-                      type: CustomCollectionFieldType.custom,
-                      onCustomRender: (
-                        field,
-                        value,
-                        onUpdate,
-                        item,
-                        itemId
-                      ) => {
-                        return React.createElement(
-                          "div",
-                          null,
+                // PropertyFieldCollectionData("firstLvlMenuItems", {
+                //   key: "firstLvlMenuItems",
+                //   label: "",
+                //   panelHeader: "Create top level menu items",
+                //   manageBtnLabel: "1st level menu",
+                //   panelDescription:
+                //     "Look up for icons  : https://developer.microsoft.com/en-us/fabric#/styles/web/icons",
+                //   value: this.properties.firstLvlMenuItems,
+                //   fields: [
+                //     {
+                //       id: "title",
+                //       title: "Title",
+                //       type: CustomCollectionFieldType.string,
+                //       required: true
+                //     },
+                //     {
+                //       id: "icon",
+                //       title: "Icon",
+                //       type: CustomCollectionFieldType.string
+                //     },
+                //     {
+                //       id: "hasSubMenu",
+                //       title: "Has sub-menu ?",
+                //       type: CustomCollectionFieldType.boolean
+                //     },
+                //     {
+                //       id: "color",
+                //       title: "Color",
+                //       type: CustomCollectionFieldType.custom,
+                //       onCustomRender: (
+                //         field,
+                //         value,
+                //         onUpdate,
+                //         item,
+                //         itemId
+                //       ) => {
+                //         return React.createElement(
+                //           "div",
+                //           null,
 
-                          getSubMenuCheckBoxJSXElement(value, field, onUpdate)
-                        );
-                      }
-                    }
-                  ],
-                  disabled: false
-                }),
+                //           getColourPickerJSXElement(value, field, onUpdate)
+                //         );
+                //       }
+                //     }
+                //   ],
+                //   disabled: false
+                // }),
 
                 new PropertyMenuDataCollections("dataCollections", {
                   key: "dataCollections",
                   panelHeaderTitle: "Menu Builder",
+                  calloutButtonTitle: "Menu Builder",
                   value: this.properties.dataCollections,
                   onProppertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   fields: [
@@ -146,7 +144,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                         return React.createElement(
                           "div",
                           null,
-                          getSubMenuCheckBoxJSXElement(value, field, onUpdate)
+                          getColourPickerJSXElement(field, value, onUpdate)
                         );
                       }
                     }

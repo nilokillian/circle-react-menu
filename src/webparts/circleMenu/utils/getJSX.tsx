@@ -4,7 +4,8 @@ import {
   ColorPicker,
   Callout,
   DirectionalHint,
-  Checkbox
+  Checkbox,
+  IColor
 } from "office-ui-fabric-react";
 import {
   IMenuColourPickerProps,
@@ -15,35 +16,35 @@ export interface IHasSubMenuCheckBoxState {
   hasSubMenu: boolean;
 }
 
-class HasSubMenuCheckBox extends React.Component<
-  IMenuColourPickerProps,
-  IHasSubMenuCheckBoxState
-> {
-  constructor(props: IMenuColourPickerProps) {
-    super(props);
-    this.state = {
-      hasSubMenu: false
-    };
-  }
+// class HasSubMenuCheckBox extends React.Component<
+//   IMenuColourPickerProps,
+//   IHasSubMenuCheckBoxState
+// > {
+//   constructor(props: IMenuColourPickerProps) {
+//     super(props);
+//     this.state = {
+//       hasSubMenu: false
+//     };
+//   }
 
-  private onCheckChange = (
-    ev: React.FormEvent<HTMLElement>,
-    checked: boolean
-  ) => {
-    this.props.onUpdate(this.props.field.id, checked);
-  };
+//   private onCheckChange = (
+//     ev: React.FormEvent<HTMLElement>,
+//     checked: boolean
+//   ) => {
+//     this.props.onUpdate(this.props.field.id, checked);
+//   };
 
-  public render() {
-    const { hasSubMenu } = this.state;
-    return (
-      <Checkbox
-        label="Controlled checkbox"
-        checked={true}
-        onChange={this.onCheckChange}
-      />
-    );
-  }
-}
+//   public render() {
+//     const { hasSubMenu } = this.state;
+//     return (
+//       <Checkbox
+//         label="Controlled checkbox"
+//         checked={true}
+//         onChange={this.onCheckChange}
+//       />
+//     );
+//   }
+// }
 
 class MenuColourPicker extends React.Component<
   IMenuColourPickerProps,
@@ -60,10 +61,11 @@ class MenuColourPicker extends React.Component<
   > = React.createRef();
 
   private onColourChange = (
-    ev: React.SyntheticEvent<HTMLElement>,
-    colorObj
+    _ev: React.SyntheticEvent<HTMLElement>,
+    colorObj: IColor
   ) => {
-    this.props.onUpdate(this.props.field.id, colorObj.str);
+    console.log("field", this.props.field);
+    this.props.onUpdate(this.props.field, colorObj.str);
   };
 
   public render() {
@@ -88,6 +90,7 @@ class MenuColourPicker extends React.Component<
                 color={this.props.color}
                 onChange={this.onColourChange}
                 alphaSliderHidden={false}
+
                 // showPreview={true}
                 // styles={colorPickerStyles}
               />
@@ -100,17 +103,17 @@ class MenuColourPicker extends React.Component<
 }
 
 export const getColourPickerJSXElement = (
-  value: any,
   field: any,
-  onUpdate: (fieldId: string, value: any) => void
+  value: any,
+  onUpdate: (fieldId: string, value: any) => any
 ) => {
   return <MenuColourPicker onUpdate={onUpdate} color={value} field={field} />;
 };
 
-export const getSubMenuCheckBoxJSXElement = (
-  value: any,
-  field: any,
-  onUpdate: (fieldId: string, value: any) => void
-) => {
-  return <MenuColourPicker onUpdate={onUpdate} color={value} field={field} />;
-};
+// export const getSubMenuCheckBoxJSXElement = (
+//   value: any,
+//   field: any,
+//   onUpdate: (fieldId: string, value: any) => void
+// ) => {
+//   return <MenuColourPicker onUpdate={onUpdate} color={value} field={field} />;
+// };
