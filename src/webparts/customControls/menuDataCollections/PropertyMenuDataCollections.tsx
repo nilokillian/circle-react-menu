@@ -7,38 +7,7 @@ import {
 } from "@microsoft/sp-property-pane";
 import { MenuDataCollectionsBuilderPanel } from "./components/MenuDataCollectionsBuilderPanel";
 import { IMenuDataCollectionsBuilderPanelProps } from "./interfaces/IMenuDataCollectionsBuilderPanelProps";
-
-export const CustomMenuDataCollectionFieldType = {
-  boolean: "checkbox",
-  string: "text",
-  number: "number",
-  custom: "custom"
-};
-
-export interface IPropertyMenuDataCollectionsFields {
-  id: string;
-  title: string;
-  type: string;
-  onCustomRender?: (
-    field: string,
-    value: any,
-    onUpdate: () => void
-  ) => JSX.Element;
-}
-
-export interface IPropertyMenuDataCollectionsProps {
-  key: string;
-  panelHeaderTitle: string;
-  calloutButtonTitle: string;
-  value: any[];
-  fields: IPropertyMenuDataCollectionsFields[];
-  customRender?: (
-    field: string,
-    value: any,
-    onUpdate: () => void
-  ) => JSX.Element;
-  onProppertyChange(propertyPath: string, oldValue: any, newValue: any): void;
-}
+import { IPropertyMenuDataCollectionsProps } from "./interfaces/IPropertyMenuDataCollectionsProps";
 
 export interface IPropertyMenuDataCollectionsInternalProps
   extends IPropertyMenuDataCollectionsProps,

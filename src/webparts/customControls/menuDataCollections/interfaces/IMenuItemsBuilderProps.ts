@@ -2,13 +2,19 @@ import { IDataCollections } from "./IDataCollections";
 import { ICurrentDataCollection } from "./ICurrentDataCollection";
 import { IPropertyMenuDataCollectionsFields } from "./IPropertyMenuDataCollectionsFields";
 
-export interface ITableRenderProps {
-  level: number;
+export interface IMenuItemsBuilderProps {
+  key?: string | number;
   fields: IPropertyMenuDataCollectionsFields[];
+  level: number;
   dataCollections: IDataCollections[];
-  currentDataCollection: ICurrentDataCollection;
-  onCurrentDataCollectionChange: (value: ICurrentDataCollection) => void;
-  onAddToCollection: (collection: ICurrentDataCollection, lvl: number) => void;
-  onRemoveDataCollection: (dataCollectionId: string) => void;
+  parentUniqueId?: string;
+  onPanelDismiss: () => void;
   toggleContainer: (parentUniqueId: string, titleValue: string) => void;
+  onAddToCollection: (
+    collection: ICurrentDataCollection,
+    lvl: number,
+    relationId?: string
+  ) => void;
+  onRemoveDataCollection: (dataCollectionId: string) => void;
+  onPropsChanged: () => void;
 }

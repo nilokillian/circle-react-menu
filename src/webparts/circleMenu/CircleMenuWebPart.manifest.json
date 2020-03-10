@@ -22,9 +22,7 @@
       "description": { "default": "circle-menu description" },
       "officeFabricIconFontName": "ProgressLoopInner",
       "properties": {
-        "color": "",
-        "firstLvlMenuItems": [],
-        "secondLvlMenuItems": []
+        "dataCollections": []
       }
     }
   ]

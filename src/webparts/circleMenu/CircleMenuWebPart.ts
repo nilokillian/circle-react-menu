@@ -1,25 +1,15 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Version } from "@microsoft/sp-core-library";
-import {
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField
-} from "@microsoft/sp-property-pane";
+import { IPropertyPaneConfiguration } from "@microsoft/sp-property-pane";
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
-
 import { CircleMenu } from "./components/CircleMenu";
-import { ICircleMenuProps } from "./components/ICircleMenuProps";
+import { ICircleMenuProps } from "./interfaces/ICircleMenuProps";
 import { ICircleMenuWebPartProps } from "./interfaces/ICircleMenuWebPartProps";
 import { initializeIcons } from "@uifabric/icons";
-import {
-  PropertyFieldCollectionData,
-  CustomCollectionFieldType
-} from "@pnp/spfx-property-controls/lib/PropertyFieldCollectionData";
 import { getColourPickerJSXElement } from "./utils/getJSX";
-import {
-  PropertyMenuDataCollections,
-  CustomMenuDataCollectionFieldType
-} from "../customControls/menuDataCollections/propertyMenuDataCollections";
+import { PropertyMenuDataCollections } from "../customControls/menuDataCollections/propertyMenuDataCollections";
+import { CustomMenuDataCollectionFieldType } from "../customControls/menuDataCollections/constants/customMenuDataCollectionFieldType";
 
 export default class CircleMenuWebPart extends BaseClientSideWebPart<
   ICircleMenuWebPartProps
@@ -28,8 +18,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
     const element: React.ReactElement<ICircleMenuProps> = React.createElement(
       CircleMenu,
       {
-        color: this.properties.color,
-        menuItems: this.properties.firstLvlMenuItems
+        menuItems: this.properties.dataCollections
       }
     );
 
@@ -56,10 +45,10 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
   ): void {
     super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
 
-    if (propertyPath === "firstLvlMenuItems" && newValue) {
-      this.properties.secondLvlMenuItems = [{ title: "Test" }];
-      console.log("newValue", newValue);
+    if (propertyPath === "dataCollections" && newValue) {
+      this.properties.dataCollections = newValue;
       this.context.propertyPane.refresh();
+      this.render();
     }
   }
 
@@ -71,54 +60,6 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
             {
               groupName: "Menu builder settings",
               groupFields: [
-                // PropertyFieldCollectionData("firstLvlMenuItems", {
-                //   key: "firstLvlMenuItems",
-                //   label: "",
-                //   panelHeader: "Create top level menu items",
-                //   manageBtnLabel: "1st level menu",
-                //   panelDescription:
-                //     "Look up for icons  : https://developer.microsoft.com/en-us/fabric#/styles/web/icons",
-                //   value: this.properties.firstLvlMenuItems,
-                //   fields: [
-                //     {
-                //       id: "title",
-                //       title: "Title",
-                //       type: CustomCollectionFieldType.string,
-                //       required: true
-                //     },
-                //     {
-                //       id: "icon",
-                //       title: "Icon",
-                //       type: CustomCollectionFieldType.string
-                //     },
-                //     {
-                //       id: "hasSubMenu",
-                //       title: "Has sub-menu ?",
-                //       type: CustomCollectionFieldType.boolean
-                //     },
-                //     {
-                //       id: "color",
-                //       title: "Color",
-                //       type: CustomCollectionFieldType.custom,
-                //       onCustomRender: (
-                //         field,
-                //         value,
-                //         onUpdate,
-                //         item,
-                //         itemId
-                //       ) => {
-                //         return React.createElement(
-                //           "div",
-                //           null,
-
-                //           getColourPickerJSXElement(value, field, onUpdate)
-                //         );
-                //       }
-                //     }
-                //   ],
-                //   disabled: false
-                // }),
-
                 new PropertyMenuDataCollections("dataCollections", {
                   key: "dataCollections",
                   panelHeaderTitle: "Menu Builder",
@@ -137,14 +78,23 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       type: CustomMenuDataCollectionFieldType.string
                     },
                     {
+                      id: "url",
+                      title: "Link",
+                      type: CustomMenuDataCollectionFieldType.string
+                    },
+                    {
                       id: "colour",
                       title: "Colour",
                       type: CustomMenuDataCollectionFieldType.custom,
-                      onCustomRender: (field, value, onUpdate) => {
+                      onCustomRender: (field, value, onCustomFieldUpdate) => {
                         return React.createElement(
                           "div",
                           null,
-                          getColourPickerJSXElement(field, value, onUpdate)
+                          getColourPickerJSXElement(
+                            field,
+                            value,
+                            onCustomFieldUpdate
+                          )
                         );
                       }
                     }

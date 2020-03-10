@@ -3,17 +3,16 @@ import {
   Panel,
   PanelType,
   DefaultButton,
-  PrimaryButton,
   IconButton,
   Separator
 } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
-import { FirstLevelBuilder } from "./FirstLevelBuilder";
-import { SecondLevelBuilder } from "./SecondLevelBuilder";
+import { MenuItemsBuilder } from "./MenuItemsBuilder";
 import { IMenuDataCollectionsBuilderPanelProps } from "../interfaces/IMenuDataCollectionsBuilderPanelProps";
 import { IDataCollections } from "../interfaces/IDataCollections";
 import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
-import { IContaners } from "../interfaces/IContaners";
+import { ID } from "../utils/generateId";
+import { usePreviousState } from "../hooks/usePreviousState";
 
 export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuilderPanelProps> = (
   props
@@ -21,71 +20,120 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [parentUniqueId, setParentUniqueId] = React.useState<string>("");
   const [titleValue, setTitleValue] = React.useState<string>("");
-  const [contaners, setContaners] = React.useState<IContaners>({
-    firstLvl: true,
-    secondLvl: false,
-    thirdLvl: false
-  });
+  const [currentLevel, setCurrentLevel] = React.useState<number>(1);
   const [dataCollections, setDataCollections] = React.useState<
     IDataCollections[]
   >([]);
 
-  const toggleContainer = (
-    contName: string,
-    parentUniqueId: string,
-    titleValue: string
-  ) => {
-    contaners[contName] = !contaners[contName];
+  const getPreviousState = usePreviousState(parentUniqueId);
 
-    if (contName === "firstLvl") {
-      contaners["secondLvl"] = true;
-    }
-    setTitleValue(titleValue);
-    setParentUniqueId(parentUniqueId);
-    setContaners({ ...contaners });
-  };
-
-  const getContainerTitle = () => {
-    let activeContainer: string;
-
-    for (let title in contaners) {
-      if (contaners[title]) {
-        activeContainer = title;
-      }
-    }
-
-    return activeContainer;
-  };
-
-  const onUpdate = () => {
-    console.log("onUpdate1");
+  const toggleContainer = (uniqueId: string, titleInputValue: string) => {
+    setTitleValue(titleInputValue);
+    setParentUniqueId(uniqueId);
+    setCurrentLevel(prevLevel => prevLevel + 1);
   };
 
   const onAddToCollection = (
     currentDataCollection: ICurrentDataCollection,
     level: number,
-    uniqueId: string
+    relationId?: string
   ): void => {
     setDataCollections([
       ...dataCollections,
       {
         fields: currentDataCollection,
-        relationId: uniqueId,
+        uniqueId: ID(),
+        relationId: relationId ? relationId : "",
         level: level
       } as IDataCollections
     ]);
   };
 
+  const onRemoveDataCollection = (dataCollectionId: string): void => {
+    const newDataCollections: IDataCollections[] = [];
+    const currentDataCollectionToRemove = dataCollections.find(
+      d => d.uniqueId === dataCollectionId
+    );
+
+    if (currentDataCollectionToRemove) {
+      switch (currentDataCollectionToRemove.level) {
+        case 1:
+          const dataCollectionsL2Ids = dataCollections
+            .filter(d => d.relationId === dataCollectionId)
+            .map(filteredData => filteredData.uniqueId);
+
+          const dataCollectionsL3Removed = dataCollections.filter(
+            d =>
+              d.relationId !==
+              dataCollectionsL2Ids.find(id => id === d.relationId)
+          );
+
+          newDataCollections.push(
+            ...dataCollectionsL3Removed.filter(
+              d =>
+                d.uniqueId !== dataCollectionId &&
+                d.relationId !== dataCollectionId
+            )
+          );
+          break;
+
+        case 2:
+          newDataCollections.push(
+            ...dataCollections.filter(
+              d =>
+                d.uniqueId !== dataCollectionId &&
+                d.relationId !== dataCollectionId
+            )
+          );
+
+          break;
+
+        case 3:
+          newDataCollections.push(
+            ...dataCollections.filter(d => d.uniqueId !== dataCollectionId)
+          );
+
+          break;
+
+        default:
+          newDataCollections.push(...dataCollections);
+          break;
+      }
+    }
+
+    setDataCollections(newDataCollections);
+  };
+
+  const getCurrentDataCollection = (subLevel: number): IDataCollections[] => {
+    return subLevel === 1
+      ? dataCollections.filter(d => d.level === subLevel)
+      : dataCollections.filter(
+          d => d.level === subLevel && d.relationId === parentUniqueId
+        );
+  };
+
+  const handleParentUniqueId = React.useCallback(() => {
+    setParentUniqueId(getPreviousState);
+  }, [parentUniqueId]);
+
+  const handleClickBack = () => {
+    setCurrentLevel(prevCurrentLevel =>
+      prevCurrentLevel !== 1 ? prevCurrentLevel - 1 : prevCurrentLevel
+    );
+    handleParentUniqueId();
+  };
+
+  const handleOnClose = (): void => {
+    setIsOpen(false);
+    setParentUniqueId("");
+    setTitleValue("");
+  };
+
   const onRenderHeader = (): JSX.Element => {
-    return titleValue ? (
+    return currentLevel !== 1 ? (
       <div className={styles.panelBuilderTitle}>
         <IconButton
-          onClick={() => {
-            contaners.secondLvl = false;
-            contaners.firstLvl = true;
-            setTitleValue("");
-            setContaners({ ...contaners });
-          }}
+          onClick={handleClickBack}
           iconProps={{ iconName: "ChevronLeft" }}
           styles={{ icon: { height: 20, fontSize: 30 } }}
         />
@@ -98,45 +146,40 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     );
   };
 
+  React.useEffect(() => {
+    if (currentLevel === 1) {
+      setParentUniqueId("");
+      setTitleValue("");
+    }
+  }, [currentLevel]);
+
+  React.useEffect(() => {
+    setDataCollections(props.value);
+  }, [props.value]);
+
   return (
     <div>
       <DefaultButton text={props.btnLabel} onClick={() => setIsOpen(true)} />
       <Panel
         isOpen={isOpen}
-        onDismiss={() => setIsOpen(false)}
+        onDismiss={handleOnClose}
         type={PanelType.large}
         closeButtonAriaLabel="Close"
         onRenderHeader={onRenderHeader}
       >
         <div className={styles.menuDataCollectionPanelTable}>
           <Separator />
-          {contaners["firstLvl"] && (
-            <FirstLevelBuilder
-              fields={props.fields}
-              dataCollections={dataCollections.filter(d => d.level === 1)}
-              toggleContainer={toggleContainer}
-              onAddToCollection={onAddToCollection}
-            />
-          )}
-          {contaners["secondLvl"] && (
-            <SecondLevelBuilder
-              parentUniqueId={parentUniqueId}
-              fields={props.fields}
-              dataCollections={dataCollections.filter(
-                d => d.level === 2 && d.relationId === parentUniqueId
-              )}
-              toggleContainer={toggleContainer}
-              onAddToCollection={onAddToCollection}
-            />
-          )}
-          <div className={styles.panelActions}>
-            <PrimaryButton
-              text="Save"
-              onClick={() => getContainerTitle()}
-              styles={{ root: { marginRight: 15 } }}
-            />
-            <DefaultButton text="Cancel" onClick={() => setIsOpen(false)} />
-          </div>
+          <MenuItemsBuilder
+            level={currentLevel}
+            parentUniqueId={currentLevel > 1 ? parentUniqueId : ""}
+            fields={props.fields}
+            onPanelDismiss={handleOnClose}
+            dataCollections={getCurrentDataCollection(currentLevel)}
+            toggleContainer={toggleContainer}
+            onAddToCollection={onAddToCollection}
+            onRemoveDataCollection={onRemoveDataCollection}
+            onPropsChanged={() => props.onChanged(dataCollections)}
+          />
         </div>
       </Panel>
     </div>

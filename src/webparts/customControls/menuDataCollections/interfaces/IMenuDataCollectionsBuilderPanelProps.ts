@@ -1,4 +1,4 @@
-import { IPropertyMenuDataCollectionsFields } from "../propertyMenuDataCollections";
+import { IPropertyMenuDataCollectionsFields } from "./IPropertyMenuDataCollectionsFields";
 
 export interface IMenuDataCollectionsBuilderPanelProps {
   key: string;
@@ -6,5 +6,5 @@ export interface IMenuDataCollectionsBuilderPanelProps {
   btnLabel: string;
   value: any[];
   fields: IPropertyMenuDataCollectionsFields[];
-  onChanged: () => void;
+  onChanged: (dataCollections: any) => void;
 }

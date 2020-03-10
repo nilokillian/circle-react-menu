@@ -1,11 +1,16 @@
 import * as React from "react";
 import { Menu } from "./Menu";
+import { InnerCircle } from "./InnerCircle";
 import { MenuToggle } from "./MenuToggle";
 import { WebPartPropsContext } from "../contexts/WebPartProps";
 
 const itemClick = e => {
   console.log("clicked");
 };
+
+export interface IMenuWrapperProps {
+  menuItems: any[];
+}
 
 const menuData = [
   {
@@ -57,7 +62,7 @@ export interface IMenuWrapperState {
 
 export const MenuWrapper = (): JSX.Element => {
   const { menuItems } = React.useContext(WebPartPropsContext);
-  const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+  // const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
 
   const makeMenu = (menuConfig: any[]) => {
     const angle = 360 / menuConfig.length;
@@ -78,13 +83,9 @@ export const MenuWrapper = (): JSX.Element => {
 
     return makeMenuItems;
   };
-  const [currentMenuItems, setCurrentMenuItems] = React.useState<any[]>(
+  const [currentMenuItems, setCurrentMenuItems] = React.useState<any[]>(() =>
     makeMenu(menuData)
   );
-
-  //   React.useEffect(() => {
-  //     makeMenu(menuData);
-  //   }, []);
 
   // private getInitialState () {
   //   return {
@@ -142,14 +143,19 @@ export const MenuWrapper = (): JSX.Element => {
     stagger(0);
   };
 
+  React.useEffect(() => {
+    animateButtons();
+  }, []);
+
   return (
     <div>
-      <MenuToggle
+      <InnerCircle />
+      {/* <MenuToggle
         toggle={() => setIsMenuOpen(prevState => !prevState)}
         open={isMenuOpen}
         animateButtons={animateButtons}
-      />
-      <Menu size={18} items={currentMenuItems} open={isMenuOpen} />
+      /> */}
+      <Menu size={18} items={currentMenuItems} open={true} />
     </div>
   );
 };

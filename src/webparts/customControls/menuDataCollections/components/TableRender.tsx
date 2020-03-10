@@ -1,11 +1,6 @@
 import * as React from "react";
 import styles from "../styles/MenuDataCollection.module.scss";
-import {
-  TextField,
-  Checkbox,
-  IconButton,
-  IColor
-} from "office-ui-fabric-react";
+import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
@@ -15,7 +10,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   currentDataCollection,
   onCurrentDataCollectionChange,
   onAddToCollection,
-  onCustomFieldUpdate,
+  onRemoveDataCollection,
   toggleContainer
 }) => {
   const onTextFieldChange = (
@@ -28,7 +23,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     onCurrentDataCollectionChange({ ...currentDataCollection });
   };
 
-  const onCustomFieldChange = (field: string, colorObj: string) => {
+  const onCustomFieldChange = (field: string, colorObj: string): any => {
     console.log("colorObj", colorObj, "field", field);
     // const fielId = event.target["name"];
     currentDataCollection[field].value = colorObj;
@@ -146,7 +141,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                     {field.onCustomRender(
                       field.id,
                       "value",
-                      onCustomFieldUpdate
+                      onCustomFieldChange
                     )}
                   </span>
                 );
@@ -154,20 +149,24 @@ export const TableRender: React.FC<ITableRenderProps> = ({
           })}
 
           <span className={`${styles.tableCell} ${styles.inputField}`}>
-            <IconButton
-              iconProps={{ iconName: "WebAppBuilderFragment" }}
-              onClick={() =>
-                toggleContainer(
-                  "firstLvl",
-                  data.relationId,
-                  data.fields["title"].value as string
-                )
-              }
-            />
+            {level < 3 && (
+              <IconButton
+                iconProps={{ iconName: "WebAppBuilderFragmentCreate" }}
+                onClick={() =>
+                  toggleContainer(
+                    data.uniqueId,
+                    data.fields["title"].value as string
+                  )
+                }
+              />
+            )}
           </span>
 
           <span className={`${styles.tableCell} ${styles.inputField}`}>
-            <IconButton iconProps={{ iconName: "Cancel" }} onClick={null} />
+            <IconButton
+              iconProps={{ iconName: "Cancel" }}
+              onClick={() => onRemoveDataCollection(data.uniqueId)}
+            />
           </span>
         </div>
       );
