@@ -8,9 +8,9 @@ import {
   Link,
   getTheme,
   FontWeights,
-  mergeStyleSets,
-  getId
+  mergeStyleSets
 } from "office-ui-fabric-react";
+import { Card } from "./Card";
 
 const theme = getTheme();
 
@@ -63,9 +63,31 @@ const fabricStyles = mergeStyleSets({
 
 export const MenuItems = ({ size, items, open }) => {
   const [callOutVis, setCallOutVis] = React.useState(false);
+  const [currentX, setCurrentX] = React.useState<number>();
   const btnRef = React.useRef();
 
-  const buttons = items.map(item => {
+  const getDirectionalHint = ():
+    | 0
+    | 1
+    | 2
+    | 12
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 13 => {
+    //rightCenter : 12
+    //leftCenter ; 9
+
+    return currentX >= 888 ? 12 : 9;
+  };
+
+  const buttons = items.map((item: any) => {
     const styling = {
       transform: `rotate(${item.rotation}deg) 
            translate(${size / 1.6}em) 
@@ -82,6 +104,7 @@ export const MenuItems = ({ size, items, open }) => {
         }
         style={styling}
         onClick={e => {
+          setCurrentX(e.clientX);
           item.click(e);
           setCallOutVis(true);
         }}
@@ -104,35 +127,17 @@ export const MenuItems = ({ size, items, open }) => {
       {callOutVis && (
         <Callout
           className={fabricStyles.callout}
-          directionalHint={DirectionalHint.leftCenter}
+          directionalHint={getDirectionalHint()}
           isBeakVisible={false}
-          ariaLabelledBy={"444"}
-          ariaDescribedBy={"rrr"}
           role="alertdialog"
-          gapSpace={0}
+          gapSpace={129}
           target={btnRef.current}
           onDismiss={() => setCallOutVis(false)}
           setInitialFocus={true}
         >
-          <div className={fabricStyles.header}>
-            <p className={fabricStyles.title} id={"klk"}>
-              All of your favorite people
-            </p>
-          </div>
+          <div className={fabricStyles.header}></div>
           <div className={fabricStyles.inner}>
-            <p className={fabricStyles.subtext} id={"uyu"}>
-              Message body is optional. If help documentation is available,
-              consider adding a link to learn more at the bottom.
-            </p>
-            <div className={fabricStyles.actions}>
-              <Link
-                className={fabricStyles.link}
-                href="http://microsoft.com"
-                target="_blank"
-              >
-                Go to microsoft
-              </Link>
-            </div>
+            <Card />
           </div>
         </Callout>
       )}

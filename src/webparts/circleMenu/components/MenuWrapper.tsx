@@ -5,7 +5,15 @@ import { MenuToggle } from "./MenuToggle";
 import { WebPartPropsContext } from "../contexts/WebPartProps";
 
 const itemClick = e => {
+  console.log("e", e);
+
+  console.log("clientLeft", e.target.clientLeft);
+  console.log("offsetWidth", e.target.offsetWidth);
+
   console.log("x", e.clientX, "y", e.clientY);
+
+  screenX: null;
+  screenY: null;
 };
 
 export interface IMenuWrapperProps {
@@ -57,12 +65,12 @@ const menuData = [
     color: "#353535",
     icon: "fa-trash",
     click: itemClick
-  },
-  {
-    color: "#353535",
-    icon: "fa-trash",
-    click: itemClick
   }
+  // {
+  //   color: "#353535",
+  //   icon: "fa-trash",
+  //   click: itemClick
+  // }
 ];
 
 export interface IMenuWrapperState {

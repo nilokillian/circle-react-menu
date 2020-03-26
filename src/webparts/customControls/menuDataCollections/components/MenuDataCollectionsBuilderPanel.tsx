@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import {
   Panel,
   PanelType,
@@ -146,14 +147,14 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentLevel === 1) {
       setParentUniqueId("");
       setTitleValue("");
     }
   }, [currentLevel]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setDataCollections(props.value);
   }, [props.value]);
 
