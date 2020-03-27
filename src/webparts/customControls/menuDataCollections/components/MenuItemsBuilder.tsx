@@ -15,7 +15,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   onAddToCollection,
   onRemoveDataCollection,
   onPanelDismiss,
-  onPropsChanged
+  onChangeDataCollection
 }): JSX.Element => {
   const [currentDataCollection, setCurrentDataCollection] = React.useState<
     ICurrentDataCollection
@@ -31,8 +31,13 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
 
   const validate = (collection: ICurrentDataCollection) => {
     const anyEmpty = Object.entries(collection).some(obj => !obj[1].value);
-    console.log("collection", Object.entries(collection));
     setIsValid(anyEmpty);
+  };
+
+  const getDataCollectionUniqueId = () => {
+    const id = Object.entries(currentDataCollection).find(
+      obj => !obj[1].uniqueId
+    );
   };
 
   React.useEffect(() => {
@@ -57,6 +62,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           setCurrentDataCollection(initInputForm(fields, parentUniqueId));
         }}
         onRemoveDataCollection={onRemoveDataCollection}
+        onChangeDataCollection={onChangeDataCollection}
         dataCollections={dataCollections}
         toggleContainer={toggleContainer}
       />
@@ -68,7 +74,6 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           onClick={() => {
             onAddToCollection(currentDataCollection, level, parentUniqueId);
             setCurrentDataCollection(initInputForm(fields, parentUniqueId));
-            onPropsChanged();
           }}
         />
         <DefaultButton text="Cancel" onClick={onPanelDismiss} />

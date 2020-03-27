@@ -104,7 +104,24 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     }
 
     setDataCollections(newDataCollections);
-    props.onChanged(newDataCollections);
+  };
+
+  const onChangeDataCollection = (
+    dataCollectionId: string,
+    fieldName: string,
+    newValue: string | boolean
+  ): void => {
+    const currentDataCollectionToChange = dataCollections.find(
+      d => d.uniqueId === dataCollectionId
+    );
+
+    currentDataCollectionToChange.fields[fieldName].value = newValue;
+
+    const newDataCollections = dataCollections
+      .filter(dC => dC.uniqueId !== dataCollectionId)
+      .concat(currentDataCollectionToChange);
+
+    setDataCollections(newDataCollections);
   };
 
   const getCurrentDataCollection = (subLevel: number): IDataCollections[] => {
@@ -156,9 +173,13 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     }
   }, [currentLevel]);
 
-  // useEffect(() => {
-  //   setDataCollections(value);
-  // }, [value]);
+  useEffect(() => {
+    setDataCollections(value);
+  }, [value]);
+
+  useEffect(() => {
+    props.onChanged(dataCollections);
+  }, [dataCollections]);
 
   return (
     <div>
@@ -181,7 +202,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
             toggleContainer={toggleContainer}
             onAddToCollection={onAddToCollection}
             onRemoveDataCollection={onRemoveDataCollection}
-            onPropsChanged={() => props.onChanged(dataCollections)}
+            onChangeDataCollection={onChangeDataCollection}
           />
         </div>
       </Panel>

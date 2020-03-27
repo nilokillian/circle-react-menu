@@ -10,5 +10,10 @@ export interface ITableRenderProps {
   onCurrentDataCollectionChange: (value: ICurrentDataCollection) => void;
   onAddToCollection: (collection: ICurrentDataCollection, lvl: number) => void;
   onRemoveDataCollection: (dataCollectionId: string) => void;
+  onChangeDataCollection: (
+    dataCollectionId: string,
+    fieldName: string,
+    newValue: string | boolean
+  ) => void;
   toggleContainer: (parentUniqueId: string, titleValue: string) => void;
 }

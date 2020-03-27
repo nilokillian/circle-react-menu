@@ -16,5 +16,9 @@ export interface IMenuItemsBuilderProps {
     relationId?: string
   ) => void;
   onRemoveDataCollection: (dataCollectionId: string) => void;
-  onPropsChanged: () => void;
+  onChangeDataCollection: (
+    dataCollectionId: string,
+    fieldName: string,
+    newValue: string | boolean
+  ) => void;
 }
