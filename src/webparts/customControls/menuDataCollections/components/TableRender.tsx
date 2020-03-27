@@ -13,7 +13,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   onRemoveDataCollection,
   toggleContainer
 }) => {
-  const onTextFieldChange = (
+  const onFieldValueChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | boolean
   ): void => {
@@ -21,6 +21,15 @@ export const TableRender: React.FC<ITableRenderProps> = ({
 
     currentDataCollection[fielId].value = newValue;
     onCurrentDataCollectionChange({ ...currentDataCollection });
+  };
+
+  const onExistingFieldValueChange = (
+    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    newValue?: string | boolean
+  ) => {
+    const fieldTitle = event.target["data-set"];
+    console.log("event.target", event.target);
+    console.log(dataCollections, fieldTitle);
   };
 
   const onCustomFieldChange = (field: string, colorObj: string): any => {
@@ -53,7 +62,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                         ? (currentDataCollection[field.id].value as string)
                         : ""
                     }
-                    onChange={onTextFieldChange}
+                    onChange={onFieldValueChange}
                     required
                   />
                 </span>
@@ -69,7 +78,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                         ? (currentDataCollection[field.id].value as boolean)
                         : false
                     }
-                    onChange={onTextFieldChange}
+                    onChange={onFieldValueChange}
                   />
                 </span>
               );
@@ -116,9 +125,11 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 return (
                   <span className={`${styles.tableCell} ${styles.inputField}`}>
                     <TextField
+                      name={data.uniqueId}
+                      data-set={data.uniqueId}
                       value={data.fields[field.id].value as string}
                       id={data.fields[field.id].uniqueId}
-                      onChange={null}
+                      onChange={onExistingFieldValueChange}
                       required
                     />
                   </span>
@@ -128,9 +139,10 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 return (
                   <span className={`${styles.tableCell} ${styles.inputField}`}>
                     <Checkbox
+                      name={field.title}
                       id={data.fields[field.id].uniqueId}
                       checked={data.fields[field.id].value as boolean}
-                      onChange={null}
+                      onChange={onExistingFieldValueChange}
                     />
                   </span>
                 );

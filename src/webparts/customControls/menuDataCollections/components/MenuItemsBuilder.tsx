@@ -31,7 +31,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
 
   const validate = (collection: ICurrentDataCollection) => {
     const anyEmpty = Object.entries(collection).some(obj => !obj[1].value);
-
+    console.log("collection", Object.entries(collection));
     setIsValid(anyEmpty);
   };
 
@@ -65,7 +65,11 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           text="Save"
           disabled={isValid}
           styles={{ root: { marginRight: 15 } }}
-          onClick={onPropsChanged}
+          onClick={() => {
+            onAddToCollection(currentDataCollection, level, parentUniqueId);
+            setCurrentDataCollection(initInputForm(fields, parentUniqueId));
+            onPropsChanged();
+          }}
         />
         <DefaultButton text="Cancel" onClick={onPanelDismiss} />
       </div>

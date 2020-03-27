@@ -10,6 +10,7 @@ import {
   IDocumentCardActivityPerson,
   ImageFit
 } from "office-ui-fabric-react";
+import { CardContextualMenu } from "./CardContextualMenu";
 
 const cardStyles: IDocumentCardStyles = {
   root: {
@@ -21,11 +22,7 @@ const cardStyles: IDocumentCardStyles = {
 };
 
 export const Card: React.FunctionComponent = () => (
-  <DocumentCard
-    aria-label="Document Card with image. How to make a good design. Last modified by Annie Lindqvist and 2 others in March 13, 2018."
-    styles={cardStyles}
-    onClickHref="http://bing.com"
-  >
+  <div>
     <DocumentCardImage
       height={250}
       imageFit={ImageFit.centerContain}
@@ -33,7 +30,8 @@ export const Card: React.FunctionComponent = () => (
     />
     <DocumentCardDetails>
       <DocumentCardTitle title="How to make a good design" shouldTruncate />
+      <CardContextualMenu />
     </DocumentCardDetails>
     {/* <DocumentCardActivity activity="Modified March 13, 2018" people={people.slice(0, 3)} /> */}
-  </DocumentCard>
+  </div>
 );

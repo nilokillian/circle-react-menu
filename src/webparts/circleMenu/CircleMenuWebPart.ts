@@ -47,6 +47,10 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
 
     if (propertyPath === "dataCollections" && newValue) {
       this.properties.dataCollections = newValue;
+      console.log(
+        "this.properties.dataCollections",
+        this.properties.dataCollections
+      );
       this.context.propertyPane.refresh();
       this.render();
     }

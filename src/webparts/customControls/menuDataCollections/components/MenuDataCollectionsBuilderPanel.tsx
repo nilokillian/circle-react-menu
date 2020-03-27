@@ -18,13 +18,14 @@ import { usePreviousState } from "../hooks/usePreviousState";
 export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuilderPanelProps> = (
   props
 ): JSX.Element => {
+  const { value } = props;
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [parentUniqueId, setParentUniqueId] = React.useState<string>("");
   const [titleValue, setTitleValue] = React.useState<string>("");
   const [currentLevel, setCurrentLevel] = React.useState<number>(1);
   const [dataCollections, setDataCollections] = React.useState<
     IDataCollections[]
-  >([]);
+  >(() => value);
 
   const getPreviousState = usePreviousState(parentUniqueId);
 
@@ -103,6 +104,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     }
 
     setDataCollections(newDataCollections);
+    props.onChanged(newDataCollections);
   };
 
   const getCurrentDataCollection = (subLevel: number): IDataCollections[] => {
@@ -154,9 +156,9 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     }
   }, [currentLevel]);
 
-  useEffect(() => {
-    setDataCollections(props.value);
-  }, [props.value]);
+  // useEffect(() => {
+  //   setDataCollections(value);
+  // }, [value]);
 
   return (
     <div>
