@@ -53,6 +53,7 @@ class MenuColourPicker extends React.Component<
   constructor(props: IMenuColourPickerProps) {
     super(props);
     this.state = {
+      initialColour: "#eeee",
       isColourPicker: false
     };
   }
@@ -67,6 +68,8 @@ class MenuColourPicker extends React.Component<
     console.log("field", this.props.field);
     this.props.onUpdate(this.props.field, colorObj.str);
   };
+
+  public componentDidMount() {}
 
   public render() {
     const { isColourPicker } = this.state;
@@ -87,10 +90,11 @@ class MenuColourPicker extends React.Component<
               directionalHint={DirectionalHint.bottomCenter}
             >
               <ColorPicker
-                color={this.props.color}
+                color={
+                  this.props.color ? this.props.color : this.state.initialColour
+                }
                 onChange={this.onColourChange}
                 alphaSliderHidden={false}
-
                 // showPreview={true}
                 // styles={colorPickerStyles}
               />

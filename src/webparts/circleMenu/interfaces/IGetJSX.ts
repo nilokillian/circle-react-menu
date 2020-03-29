@@ -1,5 +1,6 @@
 export interface IMenuColourPickerState {
   isColourPicker: boolean;
+  initialColour: string;
 }
 
 export interface IMenuColourPickerProps {

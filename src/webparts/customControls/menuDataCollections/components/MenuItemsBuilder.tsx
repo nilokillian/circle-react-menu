@@ -17,16 +17,16 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   onPanelDismiss,
   onChangeDataCollection
 }): JSX.Element => {
-  const [currentDataCollection, setCurrentDataCollection] = React.useState<
+  const [dataCollection, setDataCollection] = React.useState<
     ICurrentDataCollection
   >({} as ICurrentDataCollection);
 
   const [isValid, setIsValid] = React.useState(false);
 
   const handleCurrentDataCollectionChange = (
-    dataCollection: ICurrentDataCollection
+    collection: ICurrentDataCollection
   ): void => {
-    setCurrentDataCollection(dataCollection);
+    setDataCollection(collection);
   };
 
   const validate = (collection: ICurrentDataCollection) => {
@@ -34,32 +34,44 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
     setIsValid(anyEmpty);
   };
 
-  const getDataCollectionUniqueId = () => {
-    const id = Object.entries(currentDataCollection).find(
-      obj => !obj[1].uniqueId
-    );
-  };
+  // const getDataCollectionUniqueId = () => {
+  //   const id = Object.entries(currentDataCollection).find(
+  //     obj => !obj[1].uniqueId
+  //   );
+  // };
 
   React.useEffect(() => {
-    setCurrentDataCollection(initInputForm(fields, parentUniqueId));
+    setDataCollection(initInputForm(fields, parentUniqueId));
   }, []);
 
   React.useEffect(() => {
-    validate(currentDataCollection);
-  }, [currentDataCollection]);
+    validate(dataCollection);
+    setDefaultValue();
+  }, [dataCollection]);
+
+  const setDefaultValue = React.useCallback(() => {
+    fields.map(field => {
+      if (field.type === "custom") {
+        if (dataCollection[field.id] && !dataCollection[field.id].value) {
+          dataCollection[field.id].value = field.setDefaultValue();
+          setDataCollection(dataCollection);
+        }
+      }
+    });
+  }, [dataCollection]);
 
   return (
     <>
       <TableRender
         level={level}
         fields={fields}
-        currentDataCollection={currentDataCollection}
-        onCurrentDataCollectionChange={dataCollection =>
-          handleCurrentDataCollectionChange(dataCollection)
+        currentDataCollection={dataCollection}
+        onCurrentDataCollectionChange={collection =>
+          handleCurrentDataCollectionChange(collection)
         }
         onAddToCollection={() => {
-          onAddToCollection(currentDataCollection, level, parentUniqueId);
-          setCurrentDataCollection(initInputForm(fields, parentUniqueId));
+          onAddToCollection(dataCollection, level, parentUniqueId);
+          setDataCollection(initInputForm(fields, parentUniqueId));
         }}
         onRemoveDataCollection={onRemoveDataCollection}
         onChangeDataCollection={onChangeDataCollection}
@@ -72,8 +84,8 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           disabled={isValid}
           styles={{ root: { marginRight: 15 } }}
           onClick={() => {
-            onAddToCollection(currentDataCollection, level, parentUniqueId);
-            setCurrentDataCollection(initInputForm(fields, parentUniqueId));
+            onAddToCollection(dataCollection, level, parentUniqueId);
+            setDataCollection(initInputForm(fields, parentUniqueId));
           }}
         />
         <DefaultButton text="Cancel" onClick={onPanelDismiss} />

@@ -35,11 +35,15 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     onChangeDataCollection(dataCollectionId, fieldTitle, newValue);
   };
 
-  const onCustomFieldChange = (field: string, colorObj: string): any => {
-    console.log("colorObj", colorObj, "field", field);
+  const onCustomFieldChange = (field: string, value: string): any => {
+    console.log("colorObj", value, "field", field);
+
+    console.log("!!!!!!!!!!!!!!!");
     // const fielId = event.target["name"];
-    currentDataCollection[field].value = colorObj;
-    onCurrentDataCollectionChange({ ...currentDataCollection });
+    if (currentDataCollection[field]) {
+      currentDataCollection[field].value = value;
+      onCurrentDataCollectionChange({ ...currentDataCollection });
+    }
   };
 
   const renderTableHeaders = (): JSX.Element[] => {
@@ -61,9 +65,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <TextField
                     name={field.id}
                     value={
-                      currentDataCollection[field.id]
-                        ? (currentDataCollection[field.id].value as string)
-                        : ""
+                      currentDataCollection[field.id] &&
+                      (currentDataCollection[field.id].value as string)
                     }
                     onChange={onFieldValueChange}
                     required
@@ -77,7 +80,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <Checkbox
                     name={field.id}
                     checked={
-                      currentDataCollection[field.id]
+                      currentDataCollection[field.id].value
                         ? (currentDataCollection[field.id].value as boolean)
                         : false
                     }
@@ -92,8 +95,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   {field.onCustomRender(
                     field.id,
                     currentDataCollection[field.id]
-                      ? (currentDataCollection[field.id].value as string)
-                      : "#8ed4ba",
+                      ? currentDataCollection[field.id].value
+                      : "#red",
                     onCustomFieldChange
                   )}
                 </span>
@@ -186,6 +189,20 @@ export const TableRender: React.FC<ITableRenderProps> = ({
       );
     });
   };
+  const setCustomFieldValue = React.useCallback(
+    (fieldId: string) => {
+      if (currentDataCollection[fieldId])
+        currentDataCollection[fieldId].value = "#red";
+      onCurrentDataCollectionChange({ ...currentDataCollection });
+      return "#red";
+    },
+    [currentDataCollection]
+  );
+
+  React.useEffect(() => {
+    console.log("currentDataCollection", currentDataCollection);
+    console.log(currentDataCollection["colour"]);
+  }, [currentDataCollection]);
 
   return (
     <div className={styles.table}>

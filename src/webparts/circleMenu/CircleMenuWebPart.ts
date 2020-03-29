@@ -90,6 +90,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       id: "colour",
                       title: "Colour",
                       type: CustomMenuDataCollectionFieldType.custom,
+                      setDefaultValue: () => "#red",
                       onCustomRender: (field, value, onCustomFieldUpdate) => {
                         return React.createElement(
                           "div",

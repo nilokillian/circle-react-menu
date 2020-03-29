@@ -51,7 +51,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     ]);
   };
 
-  const onRemoveDataCollection = (dataCollectionId: string): void => {
+  const onRemoveDataCollections = (dataCollectionId: string): void => {
     const newDataCollections: IDataCollections[] = [];
     const currentDataCollectionToRemove = dataCollections.find(
       d => d.uniqueId === dataCollectionId
@@ -106,7 +106,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     setDataCollections(newDataCollections);
   };
 
-  const onChangeDataCollection = (
+  const onChangeDataCollections = (
     dataCollectionId: string,
     fieldName: string,
     newValue: string | boolean
@@ -201,8 +201,8 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
             dataCollections={getCurrentDataCollection(currentLevel)}
             toggleContainer={toggleContainer}
             onAddToCollection={onAddToCollection}
-            onRemoveDataCollection={onRemoveDataCollection}
-            onChangeDataCollection={onChangeDataCollection}
+            onRemoveDataCollection={onRemoveDataCollections}
+            onChangeDataCollection={onChangeDataCollections}
           />
         </div>
       </Panel>
