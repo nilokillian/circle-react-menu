@@ -3,6 +3,7 @@ import { ICurrentDataCollection } from "./ICurrentDataCollection";
 import { IPropertyMenuDataCollectionsFields } from "./IPropertyMenuDataCollectionsFields";
 
 export interface ITableRenderProps {
+  isValid: boolean;
   level: number;
   fields: IPropertyMenuDataCollectionsFields[];
   dataCollections: IDataCollections[];

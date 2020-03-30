@@ -5,6 +5,7 @@ import { IMenuItemsBuilderProps } from "../interfaces/IMenuItemsBuilderProps";
 import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
 import { PrimaryButton, DefaultButton } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
+import { validate } from "../utils/validate";
 
 export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   level,
@@ -29,9 +30,8 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
     setDataCollection(collection);
   };
 
-  const validate = (collection: ICurrentDataCollection) => {
-    const anyEmpty = Object.entries(collection).some(obj => !obj[1].value);
-    setIsValid(anyEmpty);
+  const validateFields = (collection: ICurrentDataCollection): void => {
+    setIsValid(validate(collection));
   };
 
   // const getDataCollectionUniqueId = () => {
@@ -45,7 +45,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   }, []);
 
   React.useEffect(() => {
-    validate(dataCollection);
+    validateFields(dataCollection);
     setDefaultValue();
   }, [dataCollection]);
 
@@ -63,6 +63,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   return (
     <>
       <TableRender
+        isValid={isValid}
         level={level}
         fields={fields}
         currentDataCollection={dataCollection}
@@ -81,7 +82,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
       <div className={styles.panelActions}>
         <PrimaryButton
           text="Save"
-          disabled={isValid}
+          disabled={!isValid}
           styles={{ root: { marginRight: 15 } }}
           onClick={() => {
             onAddToCollection(dataCollection, level, parentUniqueId);

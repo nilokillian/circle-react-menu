@@ -1,5 +1,5 @@
-import { IMenuItem } from "./IMenuItem";
+import { IMenuItemsCollection } from "./IMenuItemsCollection";
 
 export interface IWebPartPropsContextProps {
-  menuItems: IMenuItem[];
+  menuItemsCollections: IMenuItemsCollection[];
 }

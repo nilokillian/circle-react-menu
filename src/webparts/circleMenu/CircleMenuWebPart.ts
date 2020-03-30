@@ -18,7 +18,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
     const element: React.ReactElement<ICircleMenuProps> = React.createElement(
       CircleMenu,
       {
-        menuItems: this.properties.dataCollections
+        menuItemsCollections: this.properties.dataCollections
       }
     );
 
@@ -90,7 +90,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       id: "colour",
                       title: "Colour",
                       type: CustomMenuDataCollectionFieldType.custom,
-                      setDefaultValue: () => "#red",
+                      setDefaultValue: () => "#eee",
                       onCustomRender: (field, value, onCustomFieldUpdate) => {
                         return React.createElement(
                           "div",

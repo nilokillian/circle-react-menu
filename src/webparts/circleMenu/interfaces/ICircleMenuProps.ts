@@ -1,3 +1,3 @@
 export interface ICircleMenuProps {
-  menuItems: any[];
+  menuItemsCollections: any[];
 }

@@ -2,11 +2,13 @@ import * as React from "react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
+import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   dataCollections,
   fields,
   level,
+  isValid,
   currentDataCollection,
   onCurrentDataCollectionChange,
   onAddToCollection,
@@ -96,7 +98,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                     field.id,
                     currentDataCollection[field.id]
                       ? currentDataCollection[field.id].value
-                      : "#red",
+                      : "",
                     onCustomFieldChange
                   )}
                 </span>
@@ -107,6 +109,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
         <span className={`${styles.tableCell} ${styles.inputField}`}></span>
         <span className={`${styles.tableCell} ${styles.inputField}`}>
           <IconButton
+            disabled={!isValid}
             iconProps={{ iconName: "Add" }}
             onClick={() => onAddToCollection(currentDataCollection, level)}
           />
@@ -189,20 +192,6 @@ export const TableRender: React.FC<ITableRenderProps> = ({
       );
     });
   };
-  const setCustomFieldValue = React.useCallback(
-    (fieldId: string) => {
-      if (currentDataCollection[fieldId])
-        currentDataCollection[fieldId].value = "#red";
-      onCurrentDataCollectionChange({ ...currentDataCollection });
-      return "#red";
-    },
-    [currentDataCollection]
-  );
-
-  React.useEffect(() => {
-    console.log("currentDataCollection", currentDataCollection);
-    console.log(currentDataCollection["colour"]);
-  }, [currentDataCollection]);
 
   return (
     <div className={styles.table}>
