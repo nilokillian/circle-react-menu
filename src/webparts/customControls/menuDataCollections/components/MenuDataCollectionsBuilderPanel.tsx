@@ -5,13 +5,13 @@ import {
   PanelType,
   DefaultButton,
   IconButton,
-  Separator
+  Separator,
 } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { MenuItemsBuilder } from "./MenuItemsBuilder";
 import { IMenuDataCollectionsBuilderPanelProps } from "../interfaces/IMenuDataCollectionsBuilderPanelProps";
 import { IDataCollections } from "../interfaces/IDataCollections";
-import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
+import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { ID } from "../utils/generateId";
 import { usePreviousState } from "../hooks/usePreviousState";
 
@@ -29,50 +29,53 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
 
   const getPreviousState = usePreviousState(parentUniqueId);
 
-  const toggleContainer = (uniqueId: string, titleInputValue: string) => {
+  const toggleMenuBuilderLevel = (
+    uniqueId: string,
+    titleInputValue: string
+  ) => {
     setTitleValue(titleInputValue);
     setParentUniqueId(uniqueId);
-    setCurrentLevel(prevLevel => prevLevel + 1);
+    setCurrentLevel((prevLevel) => prevLevel + 1);
   };
 
-  const onAddToCollection = (
-    currentDataCollection: ICurrentDataCollection,
+  const onAddToDataCollections = (
+    inputs: IInputsCollection,
     level: number,
     relationId?: string
   ): void => {
     setDataCollections([
       ...dataCollections,
       {
-        fields: currentDataCollection,
+        fields: inputs,
         uniqueId: ID(),
         relationId: relationId ? relationId : "",
-        level: level
-      } as IDataCollections
+        level: level,
+      } as IDataCollections,
     ]);
   };
 
-  const onRemoveDataCollections = (dataCollectionId: string): void => {
+  const onRemoveFromDataCollections = (dataCollectionId: string): void => {
     const newDataCollections: IDataCollections[] = [];
     const currentDataCollectionToRemove = dataCollections.find(
-      d => d.uniqueId === dataCollectionId
+      (d) => d.uniqueId === dataCollectionId
     );
 
     if (currentDataCollectionToRemove) {
       switch (currentDataCollectionToRemove.level) {
         case 1:
           const dataCollectionsL2Ids = dataCollections
-            .filter(d => d.relationId === dataCollectionId)
-            .map(filteredData => filteredData.uniqueId);
+            .filter((d) => d.relationId === dataCollectionId)
+            .map((filteredData) => filteredData.uniqueId);
 
           const dataCollectionsL3Removed = dataCollections.filter(
-            d =>
+            (d) =>
               d.relationId !==
-              dataCollectionsL2Ids.find(id => id === d.relationId)
+              dataCollectionsL2Ids.find((id) => id === d.relationId)
           );
 
           newDataCollections.push(
             ...dataCollectionsL3Removed.filter(
-              d =>
+              (d) =>
                 d.uniqueId !== dataCollectionId &&
                 d.relationId !== dataCollectionId
             )
@@ -82,7 +85,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
         case 2:
           newDataCollections.push(
             ...dataCollections.filter(
-              d =>
+              (d) =>
                 d.uniqueId !== dataCollectionId &&
                 d.relationId !== dataCollectionId
             )
@@ -92,7 +95,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
 
         case 3:
           newDataCollections.push(
-            ...dataCollections.filter(d => d.uniqueId !== dataCollectionId)
+            ...dataCollections.filter((d) => d.uniqueId !== dataCollectionId)
           );
 
           break;
@@ -108,27 +111,23 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
 
   const onChangeDataCollections = (
     dataCollectionId: string,
-    fieldName: string,
+    fieldId: string,
     newValue: string | boolean
   ): void => {
-    const currentDataCollectionToChange = dataCollections.find(
-      d => d.uniqueId === dataCollectionId
-    );
+    for (let dataCollection of dataCollections) {
+      if (dataCollection.uniqueId === dataCollectionId) {
+        dataCollection.fields[fieldId].value = newValue;
+      }
+    }
 
-    currentDataCollectionToChange.fields[fieldName].value = newValue;
-
-    const newDataCollections = dataCollections
-      .filter(dC => dC.uniqueId !== dataCollectionId)
-      .concat(currentDataCollectionToChange);
-
-    setDataCollections(newDataCollections);
+    setDataCollections([...dataCollections]);
   };
 
-  const getCurrentDataCollection = (subLevel: number): IDataCollections[] => {
+  const getDataCollectionByLevel = (subLevel: number): IDataCollections[] => {
     return subLevel === 1
-      ? dataCollections.filter(d => d.level === subLevel)
+      ? dataCollections.filter((d) => d.level === subLevel)
       : dataCollections.filter(
-          d => d.level === subLevel && d.relationId === parentUniqueId
+          (d) => d.level === subLevel && d.relationId === parentUniqueId
         );
   };
 
@@ -137,7 +136,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
   }, [parentUniqueId]);
 
   const handleClickBack = () => {
-    setCurrentLevel(prevCurrentLevel =>
+    setCurrentLevel((prevCurrentLevel) =>
       prevCurrentLevel !== 1 ? prevCurrentLevel - 1 : prevCurrentLevel
     );
     handleParentUniqueId();
@@ -166,6 +165,10 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     );
   };
 
+  const onWebpartPropsSave = (): void => {
+    // props.onWebPartPropsChanged(dataCollections);
+  };
+
   useEffect(() => {
     if (currentLevel === 1) {
       setParentUniqueId("");
@@ -173,12 +176,12 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     }
   }, [currentLevel]);
 
-  useEffect(() => {
-    setDataCollections(value);
-  }, [value]);
+  // useEffect(() => {
+  //   setDataCollections(value);
+  // }, [value]);
 
   useEffect(() => {
-    props.onChanged(dataCollections);
+    props.onWebPartPropsChanged(dataCollections);
   }, [dataCollections]);
 
   return (
@@ -198,11 +201,12 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
             parentUniqueId={currentLevel > 1 ? parentUniqueId : ""}
             fields={props.fields}
             onPanelDismiss={handleOnClose}
-            dataCollections={getCurrentDataCollection(currentLevel)}
-            toggleContainer={toggleContainer}
-            onAddToCollection={onAddToCollection}
-            onRemoveDataCollection={onRemoveDataCollections}
+            dataCollections={getDataCollectionByLevel(currentLevel)}
+            toggleContainer={toggleMenuBuilderLevel}
+            onAddToCollection={onAddToDataCollections}
+            onRemoveDataCollection={onRemoveFromDataCollections}
             onChangeDataCollection={onChangeDataCollections}
+            onWebpartPropsSave={onWebpartPropsSave}
           />
         </div>
       </Panel>

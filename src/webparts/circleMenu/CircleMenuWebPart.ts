@@ -7,7 +7,7 @@ import { CircleMenu } from "./components/CircleMenu";
 import { ICircleMenuProps } from "./interfaces/ICircleMenuProps";
 import { ICircleMenuWebPartProps } from "./interfaces/ICircleMenuWebPartProps";
 import { initializeIcons } from "@uifabric/icons";
-import { getColourPickerJSXElement } from "./utils/getJSX";
+import { getColourPickerJSXElement } from "./customFieldControls/ColourPickerComponent";
 import { PropertyMenuDataCollections } from "../customControls/menuDataCollections/propertyMenuDataCollections";
 import { CustomMenuDataCollectionFieldType } from "../customControls/menuDataCollections/constants/customMenuDataCollectionFieldType";
 
@@ -18,7 +18,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
     const element: React.ReactElement<ICircleMenuProps> = React.createElement(
       CircleMenu,
       {
-        menuItemsCollections: this.properties.dataCollections
+        menuItemsCollections: this.properties.dataCollections,
       }
     );
 
@@ -45,13 +45,17 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
   ): void {
     super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
 
-    if (propertyPath === "dataCollections" && newValue) {
+    if (
+      propertyPath === "dataCollections" &&
+      newValue &&
+      newValue !== oldValue
+    ) {
       this.properties.dataCollections = newValue;
+
       console.log(
         "this.properties.dataCollections",
         this.properties.dataCollections
       );
-      this.context.propertyPane.refresh();
       this.render();
     }
   }
@@ -74,42 +78,48 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                     {
                       id: "title",
                       title: "Title",
-                      type: CustomMenuDataCollectionFieldType.string
+                      type: CustomMenuDataCollectionFieldType.string,
                     },
                     {
                       id: "icon",
                       title: "Icon",
-                      type: CustomMenuDataCollectionFieldType.string
+                      type: CustomMenuDataCollectionFieldType.string,
                     },
                     {
                       id: "url",
                       title: "Link",
-                      type: CustomMenuDataCollectionFieldType.string
+                      type: CustomMenuDataCollectionFieldType.string,
                     },
                     {
                       id: "colour",
                       title: "Colour",
                       type: CustomMenuDataCollectionFieldType.custom,
                       setDefaultValue: () => "#eee",
-                      onCustomRender: (field, value, onCustomFieldUpdate) => {
+                      onCustomRender: (
+                        field,
+                        value,
+                        onCustomFieldUpdate,
+                        dataCollectionId
+                      ) => {
                         return React.createElement(
                           "div",
                           null,
                           getColourPickerJSXElement(
                             field,
                             value,
-                            onCustomFieldUpdate
+                            onCustomFieldUpdate,
+                            dataCollectionId
                           )
                         );
-                      }
-                    }
-                  ]
-                })
-              ]
-            }
-          ]
-        }
-      ]
+                      },
+                    },
+                  ],
+                }),
+              ],
+            },
+          ],
+        },
+      ],
     };
   }
 }

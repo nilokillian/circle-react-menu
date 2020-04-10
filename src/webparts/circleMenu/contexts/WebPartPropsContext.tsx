@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createContext, useState, useEffect } from "react";
+import { createContext } from "react";
 import { IWebPartPropsContextProps } from "../interfaces/IWebPartPropsContextProps";
 import { IMenuItemsCollection } from "../interfaces/IMenuItemsCollection";
 
@@ -13,12 +13,8 @@ export const WebPartPropsContext = createContext<IWebPartPropsContext>(
 
 export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = ({
   menuItemsCollections,
-  children
+  children,
 }) => {
-  const [menuItemsState, setMenuItemsState] = useState<IMenuItemsCollection[]>(
-    []
-  );
-
   const getSubItems = (
     itemsCollections: IMenuItemsCollection[],
     perentId: string
@@ -32,9 +28,10 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
           url: itemsCollection.fields["url"].value,
           icon: itemsCollection.fields["icon"].value,
           color: itemsCollection.fields["colour"].value,
+          click: () => console.log("click"),
           subMenu:
             itemsCollection.level <= 3 &&
-            getSubItems(menuItemsCollections, itemsCollection.uniqueId)
+            getSubItems(menuItemsCollections, itemsCollection.uniqueId),
         });
       }
     }
@@ -42,7 +39,7 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
     return tempArray;
   };
 
-  const composeItems = (): void => {
+  const composeItems = (): any[] => {
     const composedMenuItems = [];
 
     for (let collection of menuItemsCollections) {
@@ -52,19 +49,16 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
           url: collection.fields["url"].value,
           icon: collection.fields["icon"].value,
           color: collection.fields["colour"].value,
-          subMenu: getSubItems(menuItemsCollections, collection.uniqueId)
+          subMenu: getSubItems(menuItemsCollections, collection.uniqueId),
         });
       }
     }
-    setMenuItemsState(composedMenuItems);
+
+    return composedMenuItems;
   };
 
-  useEffect(() => {
-    composeItems();
-  }, [menuItemsCollections]);
-
   return (
-    <WebPartPropsContext.Provider value={{ menuItems: menuItemsState }}>
+    <WebPartPropsContext.Provider value={{ menuItems: composeItems() }}>
       {children}
     </WebPartPropsContext.Provider>
   );

@@ -1,7 +1,7 @@
-import { ICurrentDataCollection } from "../../customControls/menuDataCollections/interfaces/ICurrentDataCollection";
+import { IInputsCollection } from "../../customControls/menuDataCollections/interfaces/IInputsCollection";
 
 export interface IMenuItemsCollection {
-  fields: ICurrentDataCollection;
+  fields: IInputsCollection;
   uniqueId: string;
   relationId: string;
   level: number;

@@ -2,19 +2,18 @@ import * as React from "react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
-import { ICurrentDataCollection } from "../interfaces/ICurrentDataCollection";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   dataCollections,
   fields,
   level,
   isValid,
-  currentDataCollection,
-  onCurrentDataCollectionChange,
+  inputsCollection,
+  onInputsCollectionChange,
   onAddToCollection,
   onRemoveDataCollection,
   onChangeDataCollection,
-  toggleContainer
+  toggleContainer,
 }) => {
   const onFieldValueChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -22,34 +21,39 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   ): void => {
     const fielId = event.target["name"];
 
-    currentDataCollection[fielId].value = newValue;
-    onCurrentDataCollectionChange({ ...currentDataCollection });
+    const updatedInputsCollection = { ...inputsCollection };
+
+    updatedInputsCollection[fielId].value = newValue;
+    onInputsCollectionChange(updatedInputsCollection);
   };
 
   const onExistingFieldValueChange = (
-    event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: any,
     newValue?: string | boolean
   ) => {
-    const dataCollectionId = event.target["id"];
-    const fieldTitle = event.target["name"];
-    console.log("dataCollectionId", dataCollectionId, "fieldTitle", fieldTitle);
+    const dataCollectionId = event.target.getAttribute("data-set");
+    const fieldId = event.target["name"];
 
-    onChangeDataCollection(dataCollectionId, fieldTitle, newValue);
+    onChangeDataCollection(dataCollectionId, fieldId, newValue);
   };
 
-  const onCustomFieldChange = (field: string, value: string): any => {
-    console.log("colorObj", value, "field", field);
-
-    console.log("!!!!!!!!!!!!!!!");
-    // const fielId = event.target["name"];
-    if (currentDataCollection[field]) {
-      currentDataCollection[field].value = value;
-      onCurrentDataCollectionChange({ ...currentDataCollection });
+  const onCustomFieldValueChange = (field: string, value: string): void => {
+    if (inputsCollection[field]) {
+      inputsCollection[field].value = value;
+      onInputsCollectionChange(inputsCollection);
     }
   };
 
+  const onExistingCustomFieldValueChange = (
+    fieldId: string,
+    newValue: string,
+    dataCollectionId: string
+  ): void => {
+    onChangeDataCollection(dataCollectionId, fieldId, newValue);
+  };
+
   const renderTableHeaders = (): JSX.Element[] => {
-    return fields.map(field => (
+    return fields.map((field) => (
       <span className={`${styles.tableHead} ${styles.tableCell}`}>
         {field.title}
       </span>
@@ -59,7 +63,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   const renderFormInputFields = (): JSX.Element => {
     return (
       <>
-        {fields.map(field => {
+        {fields.map((field) => {
           switch (field.type) {
             case "text":
               return (
@@ -67,8 +71,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <TextField
                     name={field.id}
                     value={
-                      currentDataCollection[field.id] &&
-                      (currentDataCollection[field.id].value as string)
+                      inputsCollection[field.id] &&
+                      (inputsCollection[field.id].value as string)
                     }
                     onChange={onFieldValueChange}
                     required
@@ -82,8 +86,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <Checkbox
                     name={field.id}
                     checked={
-                      currentDataCollection[field.id].value
-                        ? (currentDataCollection[field.id].value as boolean)
+                      inputsCollection[field.id].value
+                        ? (inputsCollection[field.id].value as boolean)
                         : false
                     }
                     onChange={onFieldValueChange}
@@ -96,10 +100,10 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 <span className={`${styles.tableCell} ${styles.inputField}`}>
                   {field.onCustomRender(
                     field.id,
-                    currentDataCollection[field.id]
-                      ? currentDataCollection[field.id].value
-                      : "",
-                    onCustomFieldChange
+                    inputsCollection[field.id]
+                      ? inputsCollection[field.id].value
+                      : "#eeee",
+                    onCustomFieldValueChange
                   )}
                 </span>
               );
@@ -109,9 +113,9 @@ export const TableRender: React.FC<ITableRenderProps> = ({
         <span className={`${styles.tableCell} ${styles.inputField}`}></span>
         <span className={`${styles.tableCell} ${styles.inputField}`}>
           <IconButton
-            disabled={!isValid}
+            disabled={false}
             iconProps={{ iconName: "Add" }}
-            onClick={() => onAddToCollection(currentDataCollection, level)}
+            onClick={() => onAddToCollection(inputsCollection, level)}
           />
         </span>
       </>
@@ -125,18 +129,18 @@ export const TableRender: React.FC<ITableRenderProps> = ({
       );
     }
 
-    return dataCollections.map(dataCollection => {
+    return dataCollections.map((dataCollection) => {
       return (
         <div className={`${styles.tableRow} ${styles.tableFooter}`}>
-          {fields.map(field => {
+          {fields.map((field) => {
             switch (field.type) {
               case "text":
                 return (
                   <span className={`${styles.tableCell} ${styles.inputField}`}>
                     <TextField
                       name={field.id}
+                      data-set={dataCollection.uniqueId}
                       value={dataCollection.fields[field.id].value as string}
-                      id={dataCollection.uniqueId}
                       onChange={onExistingFieldValueChange}
                       required
                     />
@@ -148,7 +152,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <span className={`${styles.tableCell} ${styles.inputField}`}>
                     <Checkbox
                       name={field.id}
-                      id={dataCollection.uniqueId}
+                      data-set={dataCollection.uniqueId}
                       checked={dataCollection.fields[field.id].value as boolean}
                       onChange={onExistingFieldValueChange}
                     />
@@ -160,8 +164,9 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                   <span className={`${styles.tableCell} ${styles.inputField}`}>
                     {field.onCustomRender(
                       field.id,
-                      "value",
-                      onCustomFieldChange
+                      dataCollection.fields[field.id].value,
+                      onExistingCustomFieldValueChange,
+                      dataCollection.uniqueId
                     )}
                   </span>
                 );

@@ -1,5 +1,5 @@
 import { IDataCollections } from "./IDataCollections";
-import { ICurrentDataCollection } from "./ICurrentDataCollection";
+import { IInputsCollection } from "./IInputsCollection";
 import { IPropertyMenuDataCollectionsFields } from "./IPropertyMenuDataCollectionsFields";
 
 export interface IMenuItemsBuilderProps {
@@ -11,7 +11,7 @@ export interface IMenuItemsBuilderProps {
   onPanelDismiss: () => void;
   toggleContainer: (parentUniqueId: string, titleValue: string) => void;
   onAddToCollection: (
-    collection: ICurrentDataCollection,
+    inputs: IInputsCollection,
     lvl: number,
     relationId?: string
   ) => void;
@@ -21,4 +21,5 @@ export interface IMenuItemsBuilderProps {
     fieldName: string,
     newValue: string | boolean
   ) => void;
+  onWebpartPropsSave: () => void;
 }

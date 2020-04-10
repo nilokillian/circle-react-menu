@@ -2,9 +2,9 @@ import * as React from "react";
 import styles from "../styles/CircleMenuApp.module.scss";
 import { ICircleMenuProps } from "../interfaces/ICircleMenuProps";
 import { MenuWrapper } from "./MenuWrapper";
-import { WebPartPropsContextProvider } from "../contexts/WebPartProps";
+import { WebPartPropsContextProvider } from "../contexts/WebPartPropsContext";
 
-export const CircleMenu: React.FC<ICircleMenuProps> = props => {
+export const CircleMenu: React.FC<ICircleMenuProps> = (props) => {
   return (
     <div className={styles.circleMenu}>
       <div className={styles.container}>

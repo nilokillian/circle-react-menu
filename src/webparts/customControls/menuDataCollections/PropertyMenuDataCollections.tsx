@@ -3,7 +3,7 @@ import * as ReactDom from "react-dom";
 import {
   IPropertyPaneField,
   PropertyPaneFieldType,
-  IPropertyPaneCustomFieldProps
+  IPropertyPaneCustomFieldProps,
 } from "@microsoft/sp-property-pane";
 import { MenuDataCollectionsBuilderPanel } from "./components/MenuDataCollectionsBuilderPanel";
 import { IMenuDataCollectionsBuilderPanelProps } from "./interfaces/IMenuDataCollectionsBuilderPanelProps";
@@ -32,7 +32,7 @@ export class PropertyMenuDataCollections
       value: properties.value,
       fields: properties.fields,
       onProppertyChange: properties.onProppertyChange,
-      onRender: this.onRender.bind(this)
+      onRender: this.onRender.bind(this),
     };
   }
 
@@ -53,7 +53,7 @@ export class PropertyMenuDataCollections
         btnLabel: this.properties.calloutButtonTitle,
         value: this.properties.value,
         fields: this.properties.fields,
-        onChanged: this.onChanged.bind(this)
+        onWebPartPropsChanged: this.onChanged.bind(this),
       }
     );
 

@@ -8,7 +8,7 @@ import {
   Link,
   getTheme,
   FontWeights,
-  mergeStyleSets
+  mergeStyleSets,
 } from "office-ui-fabric-react";
 import { Card } from "./Card";
 
@@ -21,44 +21,44 @@ const fabricStyles = mergeStyleSets({
     textAlign: "center",
     margin: "0 100px",
     minWidth: 130,
-    height: 32
+    height: 32,
   },
   callout: {
-    maxWidth: 300
+    maxWidth: 300,
   },
   header: {
-    padding: "18px 24px 12px"
+    padding: "18px 24px 12px",
   },
   title: [
     theme.fonts.xLarge,
     {
       margin: 0,
-      fontWeight: FontWeights.semilight
-    }
+      fontWeight: FontWeights.semilight,
+    },
   ],
   inner: {
     height: "100%",
-    padding: "0 24px 20px"
+    padding: "0 24px 20px",
   },
   actions: {
     position: "relative",
     marginTop: 20,
     width: "100%",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   subtext: [
     theme.fonts.small,
     {
       margin: 0,
-      fontWeight: FontWeights.semilight
-    }
+      fontWeight: FontWeights.semilight,
+    },
   ],
   link: [
     theme.fonts.medium,
     {
-      color: theme.palette.neutralPrimary
-    }
-  ]
+      color: theme.palette.neutralPrimary,
+    },
+  ],
 });
 
 export const MenuItems = ({ size, items, open }) => {
@@ -84,15 +84,15 @@ export const MenuItems = ({ size, items, open }) => {
     //rightCenter : 12
     //leftCenter ; 9
 
-    return currentX >= 888 ? 12 : 9;
+    return currentX >= 780 ? 12 : 9;
   };
 
   const buttons = items.map((item: any) => {
     const styling = {
       transform: `rotate(${item.rotation}deg) 
-           translate(${size / 1.6}em) 
+           translate(${size / 1.4}em) 
            rotate(${-item.rotation}deg)`,
-      backgroundColor: item.color
+      backgroundColor: item.color,
     };
 
     return (
@@ -103,13 +103,13 @@ export const MenuItems = ({ size, items, open }) => {
             : `${styles.menuItem} ${styles.itemHide}`
         }
         style={styling}
-        onClick={e => {
+        onClick={(e) => {
           setCurrentX(e.clientX);
           item.click(e);
           setCallOutVis(true);
         }}
       >
-        <Icon iconName="CompassNW" className="ms-IconExample" />
+        <Icon iconName={item.icon} className="ms-IconExample" />
 
         {/* <i className={"fa " + item.icon} aria-hidden="true"></i> */}
       </div>

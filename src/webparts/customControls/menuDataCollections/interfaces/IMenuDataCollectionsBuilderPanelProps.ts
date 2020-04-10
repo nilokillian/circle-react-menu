@@ -6,5 +6,5 @@ export interface IMenuDataCollectionsBuilderPanelProps {
   btnLabel: string;
   value: any[];
   fields: IPropertyMenuDataCollectionsFields[];
-  onChanged: (dataCollections: any) => void;
+  onWebPartPropsChanged: (dataCollections: any) => void;
 }

@@ -1,77 +1,75 @@
 import * as React from "react";
-import { Menu } from "./Menu";
+import { MemoizedMenu } from "./Menu";
 import { InnerCircle } from "./InnerCircle";
 import { MenuToggle } from "./MenuToggle";
-import { WebPartPropsContext } from "../contexts/WebPartProps";
+import { WebPartPropsContext } from "../contexts/WebPartPropsContext";
 
-const itemClick = e => {
-  console.log("e", e);
+// const itemClick = (e) => {
+//   console.log("e", e);
 
-  console.log("clientLeft", e.target.clientLeft);
-  console.log("offsetWidth", e.target.offsetWidth);
+//   console.log("clientLeft", e.target.clientLeft);
+//   console.log("offsetWidth", e.target.offsetWidth);
 
-  console.log("x", e.clientX, "y", e.clientY);
+//   console.log("x", e.clientX, "y", e.clientY);
 
-  screenX: null;
-  screenY: null;
-};
+// };
 
 export interface IMenuWrapperProps {
   menuItems: any[];
 }
 
-const menuData = [
-  {
-    color: "#b3462f",
-    icon: "fa-paper-plane",
-    click: itemClick
-  },
-  {
-    color: "#e78b38",
-    icon: "fa-pencil",
-    click: itemClick
-  },
-  {
-    color: "#353535",
-    icon: "fa-trash",
-    click: itemClick
-  },
-  {
-    color: "#303c54",
-    icon: "fa-tags",
-    click: itemClick
-  },
-  {
-    color: "#3a384e",
-    icon: "fa-search",
-    click: itemClick
-  },
-  {
-    color: "#78332c",
-    icon: "fa-users",
-    click: itemClick
-  },
-  {
-    color: "#78332c",
-    icon: "fa-users",
-    click: itemClick
-  },
-  {
-    color: "#353535",
-    icon: "fa-trash",
-    click: itemClick
-  },
-  {
-    color: "#353535",
-    icon: "fa-trash",
-    click: itemClick
-  }
-  // {
-  //   color: "#353535",
-  //   icon: "fa-trash",
-  //   click: itemClick
-  // }
-];
+// const menuData = [
+//   {
+//     color: "#b3462f",
+//     icon: "fa-paper-plane",
+//     click: itemClick
+//   },
+//   {
+//     color: "#e78b38",
+//     icon: "fa-pencil",
+//     click: itemClick
+//   },
+//   {
+//     color: "#353535",
+//     icon: "fa-trash",
+//     click: itemClick
+//   },
+//   {
+//     color: "#303c54",
+//     icon: "fa-tags",
+//     click: itemClick
+//   },
+//   {
+//     color: "#3a384e",
+//     icon: "fa-search",
+//     click: itemClick
+//   },
+//   {
+//     color: "#78332c",
+//     icon: "fa-users",
+//     click: itemClick
+//   },
+//   {
+//     color: "#78332c",
+//     icon: "fa-users",
+//     click: itemClick
+//   },
+//   {
+//     color: "#353535",
+//     icon: "fa-trash",
+//     click: itemClick
+//   },
+//   {
+//     color: "#353535",
+//     icon: "fa-trash",
+//     click: itemClick
+//   }
+//   // {
+//   //   color: "#353535",
+//   //   icon: "fa-trash",
+//   //   click: itemClick
+//   // }
+// ];
 
 export interface IMenuWrapperState {
   menuOpen: boolean;
@@ -82,77 +80,44 @@ export const MenuWrapper = (): JSX.Element => {
   const { menuItems } = React.useContext(WebPartPropsContext);
   // const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
 
-  const makeMenu = (menuConfig: any[]) => {
+  const makeMenu = (menuConfig: any[]): any[] => {
     const angle = 360 / menuConfig.length;
     let rotation = 0;
-    let makeMenuItems = [];
+    const makeMenuItems = [];
 
-    menuConfig.forEach(({ color, icon, click }) => {
+    menuConfig.forEach(({ color, icon, title, click }) => {
       makeMenuItems.push({
         color,
         icon,
         click,
+        title,
         rotation,
         angle,
-        show: false
+        show: false,
       });
       rotation += angle;
     });
 
     return makeMenuItems;
   };
-  const [currentMenuItems, setCurrentMenuItems] = React.useState<any[]>(() =>
-    makeMenu(menuData)
+  const [animatedMenuItems, setAnimatedMenuItems] = React.useState<any[]>(() =>
+    makeMenu(menuItems)
   );
 
-  // private getInitialState () {
-  //   return {
-  //     menuOpen: false,
-  //   };
-  // }
-
-  //   componentWillMount() {
-  //     this.makeMenu(menuData);
-  //   }
-
-  // calculate angles and distance between menu items
-  // then set position on menu-item objects
-
-  //setCurrentMenuItems(makeMenuItems);
-  // this.setState({
-  //   menuItems: menuItems
-  // });
-
-  //   const toggleMenu = () => {
-  //     this.setState({
-  //       menuOpen: !this.state.menuOpen
-  //     });
-  //   };
-
   // staggerd fade menu items in
-  const animateButtons = () => {
-    const length = currentMenuItems.length;
+  const animateButtons = (items: any[]): void => {
+    const length = items.length;
 
     const stagger = (i: number) => {
       if (i < length) {
         setTimeout(() => {
-          let items = currentMenuItems;
-          let showing = currentMenuItems[i].show;
+          // let items = makeMenu(menuItems);
+          // let items = currentMenuItems;
+          //   let showing = currentMenuItems[i].show;
 
-          items[i].show = !showing;
+          items[i].show = true;
 
-          setCurrentMenuItems([...items]);
-
-          //   this.setState({
-          //     menuItems: [
-          //       ...items.slice(0, i),
-          //       Object.assign({}, items[i], {
-          //         show: !showing
-          //       }),
-          //       ...items.slice(i + 1)
-          //     ]
-          //   });
-
+          setAnimatedMenuItems([...items]);
           stagger(i + 1);
         }, 70);
       }
@@ -162,18 +127,22 @@ export const MenuWrapper = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    animateButtons();
-  }, []);
+    animateButtons(makeMenu(menuItems));
+    console.log("menu items changed", menuItems);
+  }, [menuItems]);
 
   return (
     <div>
       <InnerCircle />
-      {/* <MenuToggle
-        toggle={() => setIsMenuOpen(prevState => !prevState)}
-        open={isMenuOpen}
-        animateButtons={animateButtons}
-      /> */}
-      <Menu size={18} items={currentMenuItems} open={true} />
+      <MemoizedMenu size={17} items={animatedMenuItems} />
     </div>
   );
 };
+
+{
+  /* <MenuToggle
+        toggle={() => setIsMenuOpen(prevState => !prevState)}
+        open={isMenuOpen}
+        animateButtons={animateButtons}
+      /> */
+}

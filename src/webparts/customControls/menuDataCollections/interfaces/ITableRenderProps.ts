@@ -1,5 +1,5 @@
 import { IDataCollections } from "./IDataCollections";
-import { ICurrentDataCollection } from "./ICurrentDataCollection";
+import { IInputsCollection } from "./IInputsCollection";
 import { IPropertyMenuDataCollectionsFields } from "./IPropertyMenuDataCollectionsFields";
 
 export interface ITableRenderProps {
@@ -7,9 +7,9 @@ export interface ITableRenderProps {
   level: number;
   fields: IPropertyMenuDataCollectionsFields[];
   dataCollections: IDataCollections[];
-  currentDataCollection: ICurrentDataCollection;
-  onCurrentDataCollectionChange: (value: ICurrentDataCollection) => void;
-  onAddToCollection: (collection: ICurrentDataCollection, lvl: number) => void;
+  inputsCollection: IInputsCollection;
+  onInputsCollectionChange: (value: IInputsCollection) => void;
+  onAddToCollection: (collection: IInputsCollection, lvl: number) => void;
   onRemoveDataCollection: (dataCollectionId: string) => void;
   onChangeDataCollection: (
     dataCollectionId: string,

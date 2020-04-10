@@ -1,7 +1,7 @@
-import { ICurrentDataCollection } from "./ICurrentDataCollection";
+import { IInputsCollection } from "./IInputsCollection";
 
 export interface IDataCollections {
-  fields: ICurrentDataCollection;
+  fields: IInputsCollection;
   uniqueId: string;
   relationId?: string;
   level: number;
