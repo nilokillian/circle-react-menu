@@ -2,17 +2,19 @@ import * as React from "react";
 import styles from "../styles/CircleMenu.module.scss";
 import {
   Icon,
-  DefaultButton,
-  DirectionalHint,
   Callout,
-  Link,
+  TooltipHost,
   getTheme,
   FontWeights,
   mergeStyleSets,
+  ITooltipHostStyles,
 } from "office-ui-fabric-react";
 import { Card } from "./Card";
 
 const theme = getTheme();
+const hostStyles: Partial<ITooltipHostStyles> = {
+  root: { display: "flex", margin: "auto" },
+};
 
 const fabricStyles = mergeStyleSets({
   buttonArea: {
@@ -61,9 +63,10 @@ const fabricStyles = mergeStyleSets({
   ],
 });
 
-export const MenuItems = ({ size, items, open }) => {
+export const MenuItems = ({ centreToCircle, items, open }) => {
   const [callOutVis, setCallOutVis] = React.useState(false);
   const [currentX, setCurrentX] = React.useState<number>();
+  const [activeMenu, setActiveMenu] = React.useState();
   const btnRef = React.useRef();
 
   const getDirectionalHint = ():
@@ -90,27 +93,33 @@ export const MenuItems = ({ size, items, open }) => {
   const buttons = items.map((item: any) => {
     const styling = {
       transform: `rotate(${item.rotation}deg) 
-           translate(${size / 1.4}em) 
+           translate(${centreToCircle / 1.7}em) 
            rotate(${-item.rotation}deg)`,
       backgroundColor: item.color,
     };
 
     return (
       <div
-        className={
-          item.show
-            ? `${styles.menuItem} ${styles.itemShow}`
-            : `${styles.menuItem} ${styles.itemHide}`
-        }
+        className={`${styles.menuItem} ${styles.itemShow}`}
         style={styling}
         onClick={(e) => {
-          setCurrentX(e.clientX);
-          item.click(e);
+          setCurrentX(e.pageX);
+          setActiveMenu(item);
           setCallOutVis(true);
         }}
       >
-        <Icon iconName={item.icon} className="ms-IconExample" />
-
+        <TooltipHost
+          styles={hostStyles}
+          content={item.title}
+          id={item.title}
+          calloutProps={{ gapSpace: 10 }}
+        >
+          <Icon
+            iconName={item.icon}
+            className="ms-IconExample"
+            aria-describedby={item.title}
+          />
+        </TooltipHost>
         {/* <i className={"fa " + item.icon} aria-hidden="true"></i> */}
       </div>
     );
@@ -137,10 +146,16 @@ export const MenuItems = ({ size, items, open }) => {
         >
           <div className={fabricStyles.header}></div>
           <div className={fabricStyles.inner}>
-            <Card />
+            <Card {...activeMenu} />
           </div>
         </Callout>
       )}
     </div>
   );
 };
+
+// className={
+//   item.show
+//     ? `${styles.menuItem} ${styles.itemShow}`
+//     : `${styles.menuItem} ${styles.itemHide}`
+// }

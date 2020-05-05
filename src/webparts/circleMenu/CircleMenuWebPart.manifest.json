@@ -22,7 +22,8 @@
       "description": { "default": "circle-menu description" },
       "officeFabricIconFontName": "ProgressLoopInner",
       "properties": {
-        "dataCollections": []
+        "dataCollections": [],
+        "centreToCircle": 18
       }
     }
   ]

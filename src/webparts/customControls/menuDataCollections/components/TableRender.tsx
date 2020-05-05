@@ -2,6 +2,7 @@ import * as React from "react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
+import { ID } from "../utils/generateId";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   dataCollections,
@@ -33,6 +34,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   ) => {
     const dataCollectionId = event.target.getAttribute("data-set");
     const fieldId = event.target["name"];
+    const id = event.target["id"];
 
     onChangeDataCollection(dataCollectionId, fieldId, newValue);
   };
@@ -70,6 +72,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 <span className={`${styles.tableCell} ${styles.inputField}`}>
                   <TextField
                     name={field.id}
+                    id={ID()}
                     value={
                       inputsCollection[field.id] &&
                       (inputsCollection[field.id].value as string)
@@ -85,6 +88,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 <span className={`${styles.tableCell} ${styles.inputField}`}>
                   <Checkbox
                     name={field.id}
+                    id={ID()}
                     checked={
                       inputsCollection[field.id].value
                         ? (inputsCollection[field.id].value as boolean)

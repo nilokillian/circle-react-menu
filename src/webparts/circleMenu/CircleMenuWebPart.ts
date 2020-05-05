@@ -2,9 +2,13 @@ import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Version } from "@microsoft/sp-core-library";
 import { IPropertyPaneConfiguration } from "@microsoft/sp-property-pane";
-import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
-import { CircleMenu } from "./components/CircleMenu";
-import { ICircleMenuProps } from "./interfaces/ICircleMenuProps";
+import {
+  BaseClientSideWebPart,
+  PropertyPaneSlider,
+  PropertyPaneHorizontalRule,
+} from "@microsoft/sp-webpart-base";
+import { CircleMenuApp } from "./components/CircleMenuApp";
+import { ICircleMenuAppProps } from "./interfaces/ICircleMenuAppProps";
 import { ICircleMenuWebPartProps } from "./interfaces/ICircleMenuWebPartProps";
 import { initializeIcons } from "@uifabric/icons";
 import { getColourPickerJSXElement } from "./customFieldControls/ColourPickerComponent";
@@ -15,10 +19,11 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
   ICircleMenuWebPartProps
 > {
   public render(): void {
-    const element: React.ReactElement<ICircleMenuProps> = React.createElement(
-      CircleMenu,
+    const element: React.ReactElement<ICircleMenuAppProps> = React.createElement(
+      CircleMenuApp,
       {
         menuItemsCollections: this.properties.dataCollections,
+        centreToCircle: this.properties.centreToCircle,
       }
     );
 
@@ -86,6 +91,11 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       type: CustomMenuDataCollectionFieldType.string,
                     },
                     {
+                      id: "imageUrl",
+                      title: "Image Link",
+                      type: CustomMenuDataCollectionFieldType.string,
+                    },
+                    {
                       id: "url",
                       title: "Link",
                       type: CustomMenuDataCollectionFieldType.string,
@@ -114,6 +124,15 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       },
                     },
                   ],
+                }),
+                PropertyPaneHorizontalRule(),
+                PropertyPaneSlider("centreToCircle", {
+                  label: "Distance from center",
+                  min: 10,
+                  max: 19,
+                  value: this.properties.centreToCircle,
+                  showValue: true,
+                  step: 1,
                 }),
               ],
             },

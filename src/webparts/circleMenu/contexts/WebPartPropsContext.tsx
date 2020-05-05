@@ -5,6 +5,7 @@ import { IMenuItemsCollection } from "../interfaces/IMenuItemsCollection";
 
 export interface IWebPartPropsContext {
   menuItems: IMenuItemsCollection[];
+  centreToCircle: number;
 }
 
 export const WebPartPropsContext = createContext<IWebPartPropsContext>(
@@ -13,6 +14,7 @@ export const WebPartPropsContext = createContext<IWebPartPropsContext>(
 
 export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = ({
   menuItemsCollections,
+  centreToCircle,
   children,
 }) => {
   const getSubItems = (
@@ -26,9 +28,9 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
         tempArray.push({
           title: itemsCollection.fields["title"].value,
           url: itemsCollection.fields["url"].value,
+          imageUrl: itemsCollection.fields["imageUrl"].value,
           icon: itemsCollection.fields["icon"].value,
           color: itemsCollection.fields["colour"].value,
-          click: () => console.log("click"),
           subMenu:
             itemsCollection.level <= 3 &&
             getSubItems(menuItemsCollections, itemsCollection.uniqueId),
@@ -48,6 +50,7 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
           title: collection.fields["title"].value,
           url: collection.fields["url"].value,
           icon: collection.fields["icon"].value,
+          imageUrl: collection.fields["imageUrl"].value,
           color: collection.fields["colour"].value,
           subMenu: getSubItems(menuItemsCollections, collection.uniqueId),
         });
@@ -58,7 +61,9 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
   };
 
   return (
-    <WebPartPropsContext.Provider value={{ menuItems: composeItems() }}>
+    <WebPartPropsContext.Provider
+      value={{ menuItems: composeItems(), centreToCircle }}
+    >
       {children}
     </WebPartPropsContext.Provider>
   );
