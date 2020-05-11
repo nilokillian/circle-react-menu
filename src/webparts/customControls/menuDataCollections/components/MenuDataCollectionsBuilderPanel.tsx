@@ -165,10 +165,6 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     );
   };
 
-  const onWebpartPropsSave = (): void => {
-    // props.onWebPartPropsChanged(dataCollections);
-  };
-
   useEffect(() => {
     if (currentLevel === 1) {
       setParentUniqueId("");
@@ -206,7 +202,6 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
             onAddToCollection={onAddToDataCollections}
             onRemoveDataCollection={onRemoveFromDataCollections}
             onChangeDataCollection={onChangeDataCollections}
-            onWebpartPropsSave={onWebpartPropsSave}
           />
         </div>
       </Panel>

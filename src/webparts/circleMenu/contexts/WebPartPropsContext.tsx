@@ -2,10 +2,12 @@ import * as React from "react";
 import { createContext } from "react";
 import { IWebPartPropsContextProps } from "../interfaces/IWebPartPropsContextProps";
 import { IMenuItemsCollection } from "../interfaces/IMenuItemsCollection";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface IWebPartPropsContext {
   menuItems: IMenuItemsCollection[];
   centreToCircle: number;
+  pageContext: WebPartContext;
 }
 
 export const WebPartPropsContext = createContext<IWebPartPropsContext>(
@@ -15,6 +17,7 @@ export const WebPartPropsContext = createContext<IWebPartPropsContext>(
 export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = ({
   menuItemsCollections,
   centreToCircle,
+  pageContext,
   children,
 }) => {
   const getSubItems = (
@@ -62,7 +65,7 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
 
   return (
     <WebPartPropsContext.Provider
-      value={{ menuItems: composeItems(), centreToCircle }}
+      value={{ menuItems: composeItems(), centreToCircle, pageContext }}
     >
       {children}
     </WebPartPropsContext.Provider>

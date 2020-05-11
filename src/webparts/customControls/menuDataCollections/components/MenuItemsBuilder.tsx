@@ -6,6 +6,7 @@ import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { PrimaryButton, DefaultButton } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { validateFields, validateCollections } from "../utils/validate";
+import { MenuDataCollectionsContextProvider } from "../context/MenuDataCollectionsContext";
 
 export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   level,
@@ -17,7 +18,6 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   onRemoveDataCollection,
   onPanelDismiss,
   onChangeDataCollection,
-  onWebpartPropsSave,
 }): JSX.Element => {
   const [inputsCollection, setInputsCollection] = React.useState<
     IInputsCollection
@@ -63,7 +63,7 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   }, []);
 
   return (
-    <>
+    <MenuDataCollectionsContextProvider {...{ level, fields }}>
       <TableRender
         isValid={isValid}
         level={level}
@@ -87,13 +87,12 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           disabled={false}
           styles={{ root: { marginRight: 15 } }}
           onClick={() => {
-            // onWebpartPropsSave();
             onAddToCollection(inputsCollection, level, parentUniqueId);
             setInputsCollection(initInputForm(fields, parentUniqueId));
           }}
         />
         <DefaultButton text="Cancel" onClick={onPanelDismiss} />
       </div>
-    </>
+    </MenuDataCollectionsContextProvider>
   );
 };

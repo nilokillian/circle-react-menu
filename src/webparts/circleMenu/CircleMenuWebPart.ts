@@ -24,6 +24,7 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
       {
         menuItemsCollections: this.properties.dataCollections,
         centreToCircle: this.properties.centreToCircle,
+        pageContext: this.context,
       }
     );
 

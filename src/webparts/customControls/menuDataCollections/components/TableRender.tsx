@@ -3,6 +3,7 @@ import styles from "../styles/MenuDataCollection.module.scss";
 import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
 import { ID } from "../utils/generateId";
+import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   dataCollections,
@@ -16,6 +17,11 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   onChangeDataCollection,
   toggleContainer,
 }) => {
+  const {
+    addToDataCollections,
+    onChangeInputFieldValue,
+    inputFormValuesCollection,
+  } = React.useContext(MenuDataCollectionsContext);
   const onFieldValueChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | boolean
@@ -24,6 +30,9 @@ export const TableRender: React.FC<ITableRenderProps> = ({
 
     const updatedInputsCollection = { ...inputsCollection };
 
+    inputFormValuesCollection[fielId].value = newValue;
+
+    onChangeInputFieldValue(inputFormValuesCollection);
     updatedInputsCollection[fielId].value = newValue;
     onInputsCollectionChange(updatedInputsCollection);
   };
@@ -119,7 +128,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
           <IconButton
             disabled={false}
             iconProps={{ iconName: "Add" }}
-            onClick={() => onAddToCollection(inputsCollection, level)}
+            onClick={() => addToDataCollections(inputsCollection, level)}
           />
         </span>
       </>

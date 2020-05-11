@@ -21,5 +21,4 @@ export interface IMenuItemsBuilderProps {
     fieldName: string,
     newValue: string | boolean
   ) => void;
-  onWebpartPropsSave: () => void;
 }
