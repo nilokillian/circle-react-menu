@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect } from "react";
 import {
   Panel,
   PanelType,
@@ -14,11 +13,15 @@ import { IDataCollections } from "../interfaces/IDataCollections";
 import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { ID } from "../utils/generateId";
 import { usePreviousState } from "../hooks/usePreviousState";
+import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 
-export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuilderPanelProps> = (
-  props
-): JSX.Element => {
-  const { value } = props;
+export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuilderPanelProps> = ({
+  fields,
+  value,
+  btnLabel,
+  onWebPartPropsChanged,
+}): JSX.Element => {
+  const { navigateLevelUp } = React.useContext(MenuDataCollectionsContext);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [parentUniqueId, setParentUniqueId] = React.useState<string>("");
   const [titleValue, setTitleValue] = React.useState<string>("");
@@ -140,6 +143,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
       prevCurrentLevel !== 1 ? prevCurrentLevel - 1 : prevCurrentLevel
     );
     handleParentUniqueId();
+    navigateLevelUp("test");
   };
 
   const handleOnClose = (): void => {
@@ -165,7 +169,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
     );
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (currentLevel === 1) {
       setParentUniqueId("");
       setTitleValue("");
@@ -176,13 +180,13 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
   //   setDataCollections(value);
   // }, [value]);
 
-  useEffect(() => {
-    props.onWebPartPropsChanged(dataCollections);
+  React.useEffect(() => {
+    onWebPartPropsChanged(dataCollections);
   }, [dataCollections]);
 
   return (
     <div>
-      <DefaultButton text={props.btnLabel} onClick={() => setIsOpen(true)} />
+      <DefaultButton text={btnLabel} onClick={() => setIsOpen(true)} />
       <Panel
         isOpen={isOpen}
         onDismiss={handleOnClose}
@@ -195,7 +199,7 @@ export const MenuDataCollectionsBuilderPanel: React.FC<IMenuDataCollectionsBuild
           <MenuItemsBuilder
             level={currentLevel}
             parentUniqueId={currentLevel > 1 ? parentUniqueId : ""}
-            fields={props.fields}
+            fields={fields}
             onPanelDismiss={handleOnClose}
             dataCollections={getDataCollectionByLevel(currentLevel)}
             toggleContainer={toggleMenuBuilderLevel}

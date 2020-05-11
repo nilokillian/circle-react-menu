@@ -1,4 +1,5 @@
 import * as React from "react";
+import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 import { TableRender } from "./TableRender";
 import { initInputForm } from "../utils/initInputForm";
 import { IMenuItemsBuilderProps } from "../interfaces/IMenuItemsBuilderProps";
@@ -6,7 +7,6 @@ import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { PrimaryButton, DefaultButton } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { validateFields, validateCollections } from "../utils/validate";
-import { MenuDataCollectionsContextProvider } from "../context/MenuDataCollectionsContext";
 
 export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   level,
@@ -19,15 +19,19 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   onPanelDismiss,
   onChangeDataCollection,
 }): JSX.Element => {
-  const [inputsCollection, setInputsCollection] = React.useState<
-    IInputsCollection
-  >({} as IInputsCollection);
+  const {
+    inputFormValuesCollection,
+    onChangeInputFieldValue,
+  } = React.useContext(MenuDataCollectionsContext);
+  // const [inputsCollection, setInputsCollection] = React.useState<
+  //   IInputsCollection
+  // >({} as IInputsCollection);
 
   const [isValid, setIsValid] = React.useState(false);
 
-  const onInputsCollectionChange = (inputs: IInputsCollection): void => {
-    setInputsCollection(inputs);
-  };
+  // const onInputsCollectionChange = (inputs: IInputsCollection): void => {
+  //   setInputsCollection(inputs);
+  // };
 
   const validate = (inputs: IInputsCollection): void => {
     // const existingDataCollection = dataCollections.find(dC=> dC.uniqueId === .)
@@ -42,39 +46,53 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
   //   );
   // };
 
-  React.useEffect(() => {
-    setInputsCollection(initInputForm(fields, parentUniqueId));
-  }, []);
+  // React.useEffect(() => {
+  //   setInputsCollection(initInputForm(fields, parentUniqueId));
+  // }, []);
+
+  // const setDefaultValue = React.useCallback(() => {
+  //   fields.map((field) => {
+  //     if (field.type === "custom") {
+  //       if (inputsCollection[field.id] && !inputsCollection[field.id].value) {
+  //         inputsCollection[field.id].value = field.setDefaultValue();
+  //         setInputsCollection(inputsCollection);
+  //       }
+  //     }
+  //   });
+  // }, [inputsCollection]);
 
   const setDefaultValue = React.useCallback(() => {
     fields.map((field) => {
       if (field.type === "custom") {
-        if (inputsCollection[field.id] && !inputsCollection[field.id].value) {
-          inputsCollection[field.id].value = field.setDefaultValue();
-          setInputsCollection(inputsCollection);
+        if (
+          inputFormValuesCollection[field.id] &&
+          !inputFormValuesCollection[field.id].value
+        ) {
+          inputFormValuesCollection[field.id].value = field.setDefaultValue();
+          onChangeInputFieldValue(inputFormValuesCollection);
         }
       }
     });
-  }, [inputsCollection]);
+  }, [inputFormValuesCollection]);
 
   React.useEffect(() => {
-    validate(inputsCollection);
+    validate(inputFormValuesCollection);
     setDefaultValue();
   }, []);
 
   return (
-    <MenuDataCollectionsContextProvider {...{ level, fields }}>
+    <>
       <TableRender
         isValid={isValid}
         level={level}
         fields={fields}
-        inputsCollection={inputsCollection}
-        onInputsCollectionChange={(collection) =>
-          onInputsCollectionChange(collection)
-        }
+        // inputsCollection={inputsCollection}
+        // onInputsCollectionChange={(collection) =>
+        //   onInputsCollectionChange(collection)
+        // }
         onAddToCollection={() => {
-          onAddToCollection(inputsCollection, level, parentUniqueId);
-          setInputsCollection(initInputForm(fields, parentUniqueId));
+          onAddToCollection(inputFormValuesCollection, level, parentUniqueId);
+          //setInputsCollection(initInputForm(fields, parentUniqueId));
         }}
         onRemoveDataCollection={onRemoveDataCollection}
         onChangeDataCollection={onChangeDataCollection}
@@ -87,12 +105,12 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
           disabled={false}
           styles={{ root: { marginRight: 15 } }}
           onClick={() => {
-            onAddToCollection(inputsCollection, level, parentUniqueId);
-            setInputsCollection(initInputForm(fields, parentUniqueId));
+            onAddToCollection(inputFormValuesCollection, level, parentUniqueId);
+            // setInputsCollection(initInputForm(fields, parentUniqueId));
           }}
         />
         <DefaultButton text="Cancel" onClick={onPanelDismiss} />
       </div>
-    </MenuDataCollectionsContextProvider>
+    </>
   );
 };

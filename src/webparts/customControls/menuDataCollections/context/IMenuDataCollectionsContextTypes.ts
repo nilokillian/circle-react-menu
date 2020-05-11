@@ -1,40 +1,40 @@
 import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { IDataCollections } from "../interfaces/IDataCollections";
 
-export enum Actions {
-  ON_CHANGE_INPUT_VALUE = "ON_CHANGE_INPUT_VALUE",
-  ON_CHANGE_DATA_COLLECTION = "ON_CHANGE_DATA_COLLECTION",
-  ADD_TO_DATA_COLLECTIONS = "ADD_TO_DATA_COLLECTIONS",
-  REMOVE_FROM_DATA_COLLECTIONS = "REMOVE_FROM_DATA_COLLECTIONS",
-  //   SET_LEVEL_TITLE = "SET_LEVEL_TITLE ",
-  //   SET_PARENT_UNIQUE_ID = "SET_PARENT_UNIQUE_ID",
-  //   SET_CURRENT_LEVEL = "SET_CURRENT_LEVEL",
-  NAVIGATE_LEVEL_DOWN = "NAVIGATE_LEVEL_DOWN",
-  NAVIGATE_LEVEL_UP = "NAVIGATE_LEVEL_UP",
-}
-
 export interface IMenuDataCollectionsContext {
-  navigateLevelDown: (uniqueId: string, inputValue: string) => void;
-  navigateLevelUp: (uniqueId: string, inputValue: string) => void;
   inputFormValuesCollection: IInputsCollection;
   dataCollections: IDataCollections[];
   onChangeInputFieldValue: (inputData: IInputsCollection) => void;
   onChangeDataCollection: (inputData: any) => void;
-  addToDataCollections: (
-    inputData: IInputsCollection,
-    level: number,
-    parentUniqueId?: string
-  ) => void;
+  addToDataCollections: (level: number, parentUniqueId?: string) => void;
+  navigateLevelDown: (uniqueId: string, inputValue: string) => void;
+  navigateLevelUp: (inputValue: string) => void;
+  resetFieldsInputs: () => void;
 }
+
+export enum Actions {
+  RESET_FIELDS_INPUTS = "RESET_FIELDS_INPUTS",
+  ON_CHANGE_INPUT_VALUE = "ON_CHANGE_INPUT_VALUE",
+  ON_CHANGE_DATA_COLLECTION = "ON_CHANGE_DATA_COLLECTION",
+  ADD_TO_DATA_COLLECTIONS = "ADD_TO_DATA_COLLECTIONS",
+  REMOVE_FROM_DATA_COLLECTIONS = "REMOVE_FROM_DATA_COLLECTIONS",
+  NAVIGATE_LEVEL_DOWN = "NAVIGATE_LEVEL_DOWN",
+  NAVIGATE_LEVEL_UP = "NAVIGATE_LEVEL_UP",
+}
+
+type ResetFieldsInputs = {
+  type: Actions.RESET_FIELDS_INPUTS;
+  payload: IInputsCollection;
+};
 
 type NavigateLevelDownAction = {
   type: Actions.NAVIGATE_LEVEL_DOWN;
-  payload: { currentLevel: number; uniqueId: string; inputValue: string };
+  payload: { currentLevel: number; parentUniqueId: string; inputValue: string };
 };
 
 type NavigateLevelUpAction = {
   type: Actions.NAVIGATE_LEVEL_UP;
-  payload: { currentLevel: number; uniqueId: string; inputValue: string };
+  payload: { level: number; parentUniqueId: string; inputValue: string };
 };
 
 type OnChangeInputValueAction = {
@@ -44,7 +44,10 @@ type OnChangeInputValueAction = {
 
 type AddToDataCollections = {
   type: Actions.ADD_TO_DATA_COLLECTIONS;
-  payload: IDataCollections;
+  payload: {
+    inputFormValuesCollection: IInputsCollection;
+    dataCollections: IDataCollections;
+  };
 };
 
 type OnChangeDataCollection = {
@@ -53,6 +56,7 @@ type OnChangeDataCollection = {
 };
 
 export type IActions =
+  | ResetFieldsInputs
   | OnChangeInputValueAction
   | AddToDataCollections
   | OnChangeDataCollection
@@ -62,7 +66,7 @@ export type IActions =
 export interface IMenuDataState {
   currentLevel: number;
   currentLevelTitle: string;
-  parentUniqueId: string;
+  currentParentUniqueId: string;
   inputFormValuesCollection: IInputsCollection;
   dataCollections: IDataCollections[];
 }

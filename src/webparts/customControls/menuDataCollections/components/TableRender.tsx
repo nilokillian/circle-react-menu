@@ -10,14 +10,15 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   fields,
   level,
   isValid,
-  inputsCollection,
-  onInputsCollectionChange,
-  onAddToCollection,
+  // inputsCollection,
+  // onInputsCollectionChange,
+  // onAddToCollection,
   onRemoveDataCollection,
   onChangeDataCollection,
   toggleContainer,
 }) => {
   const {
+    navigateLevelDown,
     addToDataCollections,
     onChangeInputFieldValue,
     inputFormValuesCollection,
@@ -28,13 +29,13 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   ): void => {
     const fielId = event.target["name"];
 
-    const updatedInputsCollection = { ...inputsCollection };
+    // const updatedInputsCollection = { ...inputsCollection };
 
     inputFormValuesCollection[fielId].value = newValue;
 
     onChangeInputFieldValue(inputFormValuesCollection);
-    updatedInputsCollection[fielId].value = newValue;
-    onInputsCollectionChange(updatedInputsCollection);
+    // updatedInputsCollection[fielId].value = newValue;
+    // onInputsCollectionChange(updatedInputsCollection);
   };
 
   const onExistingFieldValueChange = (
@@ -49,9 +50,10 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   };
 
   const onCustomFieldValueChange = (field: string, value: string): void => {
-    if (inputsCollection[field]) {
-      inputsCollection[field].value = value;
-      onInputsCollectionChange(inputsCollection);
+    if (inputFormValuesCollection[field]) {
+      inputFormValuesCollection[field].value = value;
+      onChangeInputFieldValue(inputFormValuesCollection);
+      // onInputsCollectionChange(inputsCollection);
     }
   };
 
@@ -83,8 +85,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                     name={field.id}
                     id={ID()}
                     value={
-                      inputsCollection[field.id] &&
-                      (inputsCollection[field.id].value as string)
+                      inputFormValuesCollection[field.id] &&
+                      (inputFormValuesCollection[field.id].value as string)
                     }
                     onChange={onFieldValueChange}
                     required
@@ -99,8 +101,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                     name={field.id}
                     id={ID()}
                     checked={
-                      inputsCollection[field.id].value
-                        ? (inputsCollection[field.id].value as boolean)
+                      inputFormValuesCollection[field.id].value
+                        ? (inputFormValuesCollection[field.id].value as boolean)
                         : false
                     }
                     onChange={onFieldValueChange}
@@ -113,8 +115,8 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                 <span className={`${styles.tableCell} ${styles.inputField}`}>
                   {field.onCustomRender(
                     field.id,
-                    inputsCollection[field.id]
-                      ? inputsCollection[field.id].value
+                    inputFormValuesCollection[field.id]
+                      ? inputFormValuesCollection[field.id].value
                       : "#eeee",
                     onCustomFieldValueChange
                   )}
@@ -128,7 +130,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
           <IconButton
             disabled={false}
             iconProps={{ iconName: "Add" }}
-            onClick={() => addToDataCollections(inputsCollection, level)}
+            onClick={() => addToDataCollections(level)}
           />
         </span>
       </>
@@ -190,12 +192,16 @@ export const TableRender: React.FC<ITableRenderProps> = ({
             {level < 3 && (
               <IconButton
                 iconProps={{ iconName: "WebAppBuilderFragmentCreate" }}
-                onClick={() =>
+                onClick={() => {
                   toggleContainer(
                     dataCollection.uniqueId,
                     dataCollection.fields["title"].value as string
-                  )
-                }
+                  );
+                  navigateLevelDown(
+                    dataCollection.uniqueId,
+                    dataCollection.fields["title"].value as string
+                  );
+                }}
               />
             )}
           </span>

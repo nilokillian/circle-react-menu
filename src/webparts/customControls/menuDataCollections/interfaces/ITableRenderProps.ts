@@ -7,8 +7,8 @@ export interface ITableRenderProps {
   level: number;
   fields: IPropertyMenuDataCollectionsFields[];
   dataCollections: IDataCollections[];
-  inputsCollection: IInputsCollection;
-  onInputsCollectionChange: (value: IInputsCollection) => void;
+  // inputsCollection: IInputsCollection;
+  // onInputsCollectionChange: (value: IInputsCollection) => void;
   onAddToCollection: (collection: IInputsCollection, lvl: number) => void;
   onRemoveDataCollection: (dataCollectionId: string) => void;
   onChangeDataCollection: (

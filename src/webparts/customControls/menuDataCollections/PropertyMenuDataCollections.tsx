@@ -5,9 +5,9 @@ import {
   PropertyPaneFieldType,
   IPropertyPaneCustomFieldProps,
 } from "@microsoft/sp-property-pane";
-import { MenuDataCollectionsBuilderPanel } from "./components/MenuDataCollectionsBuilderPanel";
-import { IMenuDataCollectionsBuilderPanelProps } from "./interfaces/IMenuDataCollectionsBuilderPanelProps";
+import { AppMenuDataCollectionsBuilder } from "./AppMenuDataCollectionsBuilder";
 import { IPropertyMenuDataCollectionsProps } from "./interfaces/IPropertyMenuDataCollectionsProps";
+import { IAppMenuDataCollectionsBuilderProps } from "./interfaces/IAppMenuDataCollectionsBuilder";
 
 export interface IPropertyMenuDataCollectionsInternalProps
   extends IPropertyMenuDataCollectionsProps,
@@ -45,8 +45,8 @@ export class PropertyMenuDataCollections
   private onRender(elem: HTMLElement): void {
     if (!this.elem) this.elem = elem;
 
-    const element: React.ReactElement<IMenuDataCollectionsBuilderPanelProps> = React.createElement(
-      MenuDataCollectionsBuilderPanel,
+    const element: React.ReactElement<IAppMenuDataCollectionsBuilderProps> = React.createElement(
+      AppMenuDataCollectionsBuilder,
       {
         key: this.properties.key,
         label: this.properties.panelHeaderTitle,

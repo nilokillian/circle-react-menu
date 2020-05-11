@@ -8,9 +8,16 @@ import {
   Actions,
   IMenuDataCollectionsContext,
 } from "./IMenuDataCollectionsContextTypes";
+import { usePreviousState } from "../hooks/usePreviousState";
 
 const reducer = (state: IMenuDataState, action: IActions) => {
   switch (action.type) {
+    case Actions.RESET_FIELDS_INPUTS:
+      return {
+        ...state,
+        inputFormValuesCollection: action.payload,
+      };
+
     case Actions.ON_CHANGE_INPUT_VALUE:
       return {
         ...state,
@@ -26,19 +33,24 @@ const reducer = (state: IMenuDataState, action: IActions) => {
     case Actions.ADD_TO_DATA_COLLECTIONS:
       return {
         ...state,
-        dataCollections: action.payload,
+        inputFormValuesCollection: action.payload.inputFormValuesCollection,
+        dataCollections: action.payload.dataCollections,
       };
+
     case Actions.NAVIGATE_LEVEL_DOWN:
       return {
         ...state,
-        parentUniqueId: action.payload.uniqueId,
+        currentLevel: action.payload.currentLevel,
+        currentParentUniqueId: action.payload.parentUniqueId,
         currentLevelTitle: action.payload.inputValue,
       };
 
     case Actions.NAVIGATE_LEVEL_UP:
       return {
         ...state,
-        parentUniqueId: action.payload.uniqueId,
+        currentLevel: action.payload.level,
+        currentParentUniqueId:
+          action.payload.level === 1 ? "" : action.payload.parentUniqueId,
         currentLevelTitle: action.payload.inputValue,
       };
 
@@ -53,12 +65,22 @@ const MenuDataCollectionsContext = React.createContext(
 const MenuDataCollectionsContextProvider = (props: any) => {
   const initialState = {
     currentLevel: 1,
-    parentUniqueId: "",
+    currentParentUniqueId: "",
     currentLevelTitle: "",
-    inputFormValuesCollection: initInputForm(props.fields, props.level),
+    inputFormValuesCollection: initInputForm(props.fields),
     dataCollections: [],
   };
+
   const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const prevParentUniqueIdState = usePreviousState(state.currentParentUniqueId);
+
+  const resetFieldsInputs = (): void => {
+    dispatch({
+      type: Actions.RESET_FIELDS_INPUTS,
+      payload: initInputForm(props.fields),
+    });
+  };
 
   const onChangeDataCollection = (inputData: any): void => {
     dispatch({
@@ -73,43 +95,45 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     });
   };
 
-  const addToDataCollections = (
-    inputsCollection: IInputsCollection,
-    level: number,
-    parentUniqueId = ""
-  ): void => {
+  const addToDataCollections = (level: number, parentUniqueId = ""): void => {
     dispatch({
       type: Actions.ADD_TO_DATA_COLLECTIONS,
       payload: {
-        fields: inputsCollection,
-        uniqueId: ID(),
-        relationId: parentUniqueId,
-        level,
+        inputFormValuesCollection: initInputForm(props.fields),
+        dataCollections: {
+          fields: state.inputFormValuesCollection,
+          uniqueId: ID(),
+          relationId: parentUniqueId,
+          level,
+        },
       },
     });
   };
 
-  const navigateLevelDown = (uniqueId: string, inputValue: string): void => {
+  const navigateLevelDown = (
+    parentUniqueId: string,
+    inputValue: string
+  ): void => {
     dispatch({
       type: Actions.NAVIGATE_LEVEL_DOWN,
       payload: {
         currentLevel: state.currentLevel + 1,
         inputValue,
-        uniqueId,
+        parentUniqueId: parentUniqueId,
       },
     });
   };
 
-  const navigateLevelUp = (uniqueId: string, inputValue: string): void => {
+  const navigateLevelUp = (inputValue: string): void => {
     dispatch({
-      type: Actions.NAVIGATE_LEVEL_DOWN,
+      type: Actions.NAVIGATE_LEVEL_UP,
       payload: {
-        currentLevel:
+        inputValue,
+        level:
           state.currentLevel !== 1
             ? state.currentLevel - 1
             : state.currentLevel,
-        inputValue,
-        uniqueId,
+        parentUniqueId: prevParentUniqueIdState,
       },
     });
   };
@@ -117,13 +141,14 @@ const MenuDataCollectionsContextProvider = (props: any) => {
   return (
     <MenuDataCollectionsContext.Provider
       value={{
-        navigateLevelDown,
-        navigateLevelUp,
         dataCollections: state.dataCollections,
         inputFormValuesCollection: state.inputFormValuesCollection,
         onChangeInputFieldValue,
         onChangeDataCollection,
+        navigateLevelDown,
+        navigateLevelUp,
         addToDataCollections,
+        resetFieldsInputs,
       }}
       {...props}
     />
