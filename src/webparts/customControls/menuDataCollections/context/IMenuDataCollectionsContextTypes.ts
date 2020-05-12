@@ -1,7 +1,11 @@
 import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { IDataCollections } from "../interfaces/IDataCollections";
+import { IPropertyMenuDataCollectionsFields } from "../interfaces/IPropertyMenuDataCollectionsFields";
 
 export interface IMenuDataCollectionsContext {
+  level: number;
+  parentUniqueId: string;
+  fields: IPropertyMenuDataCollectionsFields[];
   inputFormValuesCollection: IInputsCollection;
   dataCollections: IDataCollections[];
   onChangeInputFieldValue: (inputData: IInputsCollection) => void;
@@ -10,6 +14,8 @@ export interface IMenuDataCollectionsContext {
   navigateLevelDown: (uniqueId: string, inputValue: string) => void;
   navigateLevelUp: (inputValue: string) => void;
   resetFieldsInputs: () => void;
+  webPartPropertyBtnLabel: string;
+  onWebPartPropsChanged: (dataCollections: IDataCollections[]) => void;
 }
 
 export enum Actions {
@@ -46,7 +52,7 @@ type AddToDataCollections = {
   type: Actions.ADD_TO_DATA_COLLECTIONS;
   payload: {
     inputFormValuesCollection: IInputsCollection;
-    dataCollections: IDataCollections;
+    dataCollections: IDataCollections[];
   };
 };
 

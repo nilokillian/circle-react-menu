@@ -9,6 +9,7 @@ import {
   IMenuDataCollectionsContext,
 } from "./IMenuDataCollectionsContextTypes";
 import { usePreviousState } from "../hooks/usePreviousState";
+import { IDataCollections } from "../interfaces/IDataCollections";
 
 const reducer = (state: IMenuDataState, action: IActions) => {
   switch (action.type) {
@@ -63,12 +64,13 @@ const MenuDataCollectionsContext = React.createContext(
   {} as IMenuDataCollectionsContext
 );
 const MenuDataCollectionsContextProvider = (props: any) => {
+  const { fields, value, btnLabel, onWebPartPropsChanged } = props;
   const initialState = {
     currentLevel: 1,
     currentParentUniqueId: "",
     currentLevelTitle: "",
-    inputFormValuesCollection: initInputForm(props.fields),
-    dataCollections: [],
+    inputFormValuesCollection: initInputForm(fields),
+    dataCollections: value as IDataCollections[],
   };
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -78,7 +80,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
   const resetFieldsInputs = (): void => {
     dispatch({
       type: Actions.RESET_FIELDS_INPUTS,
-      payload: initInputForm(props.fields),
+      payload: initInputForm(fields),
     });
   };
 
@@ -99,15 +101,20 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     dispatch({
       type: Actions.ADD_TO_DATA_COLLECTIONS,
       payload: {
-        inputFormValuesCollection: initInputForm(props.fields),
-        dataCollections: {
-          fields: state.inputFormValuesCollection,
-          uniqueId: ID(),
-          relationId: parentUniqueId,
-          level,
-        },
+        inputFormValuesCollection: initInputForm(fields),
+        dataCollections: [
+          ...state.dataCollections,
+          {
+            fields: state.inputFormValuesCollection,
+            uniqueId: ID(),
+            relationId: parentUniqueId,
+            level,
+          },
+        ],
       },
     });
+
+   
   };
 
   const navigateLevelDown = (
@@ -137,10 +144,12 @@ const MenuDataCollectionsContextProvider = (props: any) => {
       },
     });
   };
-
   return (
     <MenuDataCollectionsContext.Provider
       value={{
+        level: state.currentLevel,
+        parentUniqueId: state.currentParentUniqueId,
+        fields,
         dataCollections: state.dataCollections,
         inputFormValuesCollection: state.inputFormValuesCollection,
         onChangeInputFieldValue,
@@ -149,9 +158,12 @@ const MenuDataCollectionsContextProvider = (props: any) => {
         navigateLevelUp,
         addToDataCollections,
         resetFieldsInputs,
+        webPartPropertyBtnLabel: btnLabel,
+        onWebPartPropsChanged,
       }}
-      {...props}
-    />
+    >
+      {props.children}
+    </MenuDataCollectionsContext.Provider>
   );
 };
 

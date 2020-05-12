@@ -6,36 +6,27 @@ import { ID } from "../utils/generateId";
 import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
-  dataCollections,
-  fields,
   level,
   isValid,
-  // inputsCollection,
-  // onInputsCollectionChange,
-  // onAddToCollection,
   onRemoveDataCollection,
   onChangeDataCollection,
-  toggleContainer,
 }) => {
   const {
+    fields,
     navigateLevelDown,
     addToDataCollections,
     onChangeInputFieldValue,
     inputFormValuesCollection,
+    dataCollections,
   } = React.useContext(MenuDataCollectionsContext);
+
   const onFieldValueChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | boolean
   ): void => {
     const fielId = event.target["name"];
-
-    // const updatedInputsCollection = { ...inputsCollection };
-
     inputFormValuesCollection[fielId].value = newValue;
-
     onChangeInputFieldValue(inputFormValuesCollection);
-    // updatedInputsCollection[fielId].value = newValue;
-    // onInputsCollectionChange(updatedInputsCollection);
   };
 
   const onExistingFieldValueChange = (
@@ -53,7 +44,6 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     if (inputFormValuesCollection[field]) {
       inputFormValuesCollection[field].value = value;
       onChangeInputFieldValue(inputFormValuesCollection);
-      // onInputsCollectionChange(inputsCollection);
     }
   };
 
@@ -193,10 +183,6 @@ export const TableRender: React.FC<ITableRenderProps> = ({
               <IconButton
                 iconProps={{ iconName: "WebAppBuilderFragmentCreate" }}
                 onClick={() => {
-                  toggleContainer(
-                    dataCollection.uniqueId,
-                    dataCollection.fields["title"].value as string
-                  );
                   navigateLevelDown(
                     dataCollection.uniqueId,
                     dataCollection.fields["title"].value as string
