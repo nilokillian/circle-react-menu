@@ -43,7 +43,7 @@ const reducer = (state: IMenuDataState, action: IActions) => {
         ...state,
         currentLevel: action.payload.currentLevel,
         currentParentUniqueId: action.payload.parentUniqueId,
-        currentLevelTitle: action.payload.inputValue,
+        currentLevelTitle: action.payload.levelTitle,
       };
 
     case Actions.NAVIGATE_LEVEL_UP:
@@ -52,7 +52,7 @@ const reducer = (state: IMenuDataState, action: IActions) => {
         currentLevel: action.payload.level,
         currentParentUniqueId:
           action.payload.level === 1 ? "" : action.payload.parentUniqueId,
-        currentLevelTitle: action.payload.inputValue,
+        currentLevelTitle: action.payload.levelTitle,
       };
 
     default:
@@ -75,7 +75,10 @@ const MenuDataCollectionsContextProvider = (props: any) => {
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  const prevParentUniqueIdState = usePreviousState(state.currentParentUniqueId);
+  const parentPrevState = usePreviousState({
+    title: state.currentLevelTitle,
+    uniqueId: state.currentParentUniqueId,
+  });
 
   const resetFieldsInputs = (): void => {
     dispatch({
@@ -90,6 +93,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
       payload: inputData,
     });
   };
+
   const onChangeInputFieldValue = (inputData: IInputsCollection): void => {
     dispatch({
       type: Actions.ON_CHANGE_INPUT_VALUE,
@@ -97,7 +101,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     });
   };
 
-  const addToDataCollections = (level: number, parentUniqueId = ""): void => {
+  const addToDataCollections = (level: number): void => {
     dispatch({
       type: Actions.ADD_TO_DATA_COLLECTIONS,
       payload: {
@@ -107,40 +111,38 @@ const MenuDataCollectionsContextProvider = (props: any) => {
           {
             fields: state.inputFormValuesCollection,
             uniqueId: ID(),
-            relationId: parentUniqueId,
+            relationId: state.currentParentUniqueId,
             level,
           },
         ],
       },
     });
-
-   
   };
 
   const navigateLevelDown = (
     parentUniqueId: string,
-    inputValue: string
+    levelTitle: string
   ): void => {
     dispatch({
       type: Actions.NAVIGATE_LEVEL_DOWN,
       payload: {
         currentLevel: state.currentLevel + 1,
-        inputValue,
+        levelTitle,
         parentUniqueId: parentUniqueId,
       },
     });
   };
 
-  const navigateLevelUp = (inputValue: string): void => {
+  const navigateLevelUp = (): void => {
     dispatch({
       type: Actions.NAVIGATE_LEVEL_UP,
       payload: {
-        inputValue,
+        levelTitle: parentPrevState.title,
         level:
           state.currentLevel !== 1
             ? state.currentLevel - 1
             : state.currentLevel,
-        parentUniqueId: prevParentUniqueIdState,
+        parentUniqueId: parentPrevState.uniqueId,
       },
     });
   };
@@ -148,6 +150,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     <MenuDataCollectionsContext.Provider
       value={{
         level: state.currentLevel,
+        levelTitle: state.currentLevelTitle,
         parentUniqueId: state.currentParentUniqueId,
         fields,
         dataCollections: state.dataCollections,

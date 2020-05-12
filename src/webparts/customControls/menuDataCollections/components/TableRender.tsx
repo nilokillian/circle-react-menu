@@ -8,16 +8,16 @@ import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContex
 export const TableRender: React.FC<ITableRenderProps> = ({
   level,
   isValid,
-  onRemoveDataCollection,
-  onChangeDataCollection,
+  dataCollections,
+  inputFormValuesCollection,
+  // onRemoveDataCollection,
+  // onChangeDataCollection,
 }) => {
   const {
     fields,
     navigateLevelDown,
     addToDataCollections,
     onChangeInputFieldValue,
-    inputFormValuesCollection,
-    dataCollections,
   } = React.useContext(MenuDataCollectionsContext);
 
   const onFieldValueChange = (
@@ -35,7 +35,6 @@ export const TableRender: React.FC<ITableRenderProps> = ({
   ) => {
     const dataCollectionId = event.target.getAttribute("data-set");
     const fieldId = event.target["name"];
-    const id = event.target["id"];
 
     onChangeDataCollection(dataCollectionId, fieldId, newValue);
   };

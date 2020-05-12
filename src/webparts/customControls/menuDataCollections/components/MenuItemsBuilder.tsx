@@ -30,12 +30,6 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
     setIsValid(validateFields(inputs));
   };
 
-  // const getDataCollectionUniqueId = () => {
-  //   const id = Object.entries(currentDataCollection).find(
-  //     obj => !obj[1].uniqueId
-  //   );
-  // };
-
   const setDefaultValue = React.useCallback(() => {
     fields.map((field) => {
       if (field.type === "custom") {
@@ -60,9 +54,14 @@ export const MenuItemsBuilder: React.FC<IMenuItemsBuilderProps> = ({
       <TableRender
         isValid={isValid}
         level={level}
-        onRemoveDataCollection={() => console.log("!")}
-        onChangeDataCollection={() => console.log("!")}
-        dataCollections={getDataCollectionByLevel(dataCollections, level, "")}
+        // onRemoveDataCollection={() => console.log("!")}
+        // onChangeDataCollection={() => console.log("!")}
+        inputFormValuesCollection={inputFormValuesCollection}
+        dataCollections={getDataCollectionByLevel(
+          dataCollections,
+          level,
+          parentUniqueId
+        )}
       />
       <div className={styles.panelActions}>
         <PrimaryButton

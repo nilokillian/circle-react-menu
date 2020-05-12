@@ -8,30 +8,18 @@ import {
 } from "office-ui-fabric-react";
 import styles from "../styles/MenuDataCollection.module.scss";
 import { MenuItemsBuilder } from "./MenuItemsBuilder";
-// import { IMenuDataCollectionsBuilderPanelProps } from "../interfaces/IMenuDataCollectionsBuilderPanelProps";
-import { IDataCollections } from "../interfaces/IDataCollections";
-// import { IInputsCollection } from "../interfaces/IInputsCollection";
-// import { ID } from "../utils/generateId";
-// import { usePreviousState } from "../hooks/usePreviousState";
 import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 
 export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
   const {
     navigateLevelUp,
     webPartPropertyBtnLabel,
+    levelTitle,
     level,
     onWebPartPropsChanged,
     dataCollections,
   } = React.useContext(MenuDataCollectionsContext);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-  // const [parentUniqueId, setParentUniqueId] = React.useState<string>("");
-  // const [titleValue, setTitleValue] = React.useState<string>("");
-  // const [currentLevel, setCurrentLevel] = React.useState<number>(1);
-  // const [dataCollections, setDataCollections] = React.useState<
-  //   IDataCollections[]
-  // >(() => value);
-  console.log("dataCollections", dataCollections);
-  // const getPreviousState = usePreviousState(parentUniqueId);
 
   // const toggleMenuBuilderLevel = (
   //   uniqueId: string,
@@ -40,22 +28,6 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
   //   setTitleValue(titleInputValue);
   //   setParentUniqueId(uniqueId);
   //   setCurrentLevel((prevLevel) => prevLevel + 1);
-  // };
-
-  // const onAddToDataCollections = (
-  //   inputs: IInputsCollection,
-  //   level: number,
-  //   relationId?: string
-  // ): void => {
-  //   setDataCollections([
-  //     ...dataCollections,
-  //     {
-  //       fields: inputs,
-  //       uniqueId: ID(),
-  //       relationId: relationId ? relationId : "",
-  //       level: level,
-  //     } as IDataCollections,
-  //   ]);
   // };
 
   // const onRemoveFromDataCollections = (dataCollectionId: string): void => {
@@ -127,18 +99,6 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
   //   setDataCollections([...dataCollections]);
   // };
 
-  // const getDataCollectionByLevel = (subLevel: number): IDataCollections[] => {
-  //   return subLevel === 1
-  //     ? dataCollections.filter((d) => d.level === subLevel)
-  //     : dataCollections.filter(
-  //         (d) => d.level === subLevel && d.relationId === parentUniqueId
-  //       );
-  // };
-
-  // const handleParentUniqueId = React.useCallback(() => {
-  //   setParentUniqueId(getPreviousState);
-  // }, [parentUniqueId]);
-
   // const handleClickBack = () => {
   //   setCurrentLevel((prevCurrentLevel) =>
   //     prevCurrentLevel !== 1 ? prevCurrentLevel - 1 : prevCurrentLevel
@@ -157,13 +117,13 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
     return level !== 1 ? (
       <div className={styles.panelBuilderTitle}>
         <IconButton
-          onClick={() => setIsOpen(false)}
+          onClick={() => navigateLevelUp()}
           iconProps={{ iconName: "ChevronLeft" }}
           styles={{ icon: { height: 20, fontSize: 30 } }}
         />
         <span
           style={{ marginLeft: 10 }}
-        >{`Submenu builder for : ${"tets"}`}</span>
+        >{`Submenu builder for : ${levelTitle}`}</span>
       </div>
     ) : (
       <span className={styles.panelBuilderTitle}>Menu builder</span>

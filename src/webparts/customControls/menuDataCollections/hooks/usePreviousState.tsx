@@ -1,9 +1,14 @@
 import { useRef, useEffect } from "react";
 
-export const usePreviousState = (value: any) => {
-  const ref = useRef();
+interface IPrevParentState {
+  title: string;
+  uniqueId: string;
+}
+
+export const usePreviousState = (value: IPrevParentState) => {
+  const ref = useRef<IPrevParentState>({} as IPrevParentState);
   useEffect(() => {
     ref.current = value;
   });
-  return ref.current as string;
+  return ref.current;
 };

@@ -4,6 +4,7 @@ import { IPropertyMenuDataCollectionsFields } from "../interfaces/IPropertyMenuD
 
 export interface IMenuDataCollectionsContext {
   level: number;
+  levelTitle: string;
   parentUniqueId: string;
   fields: IPropertyMenuDataCollectionsFields[];
   inputFormValuesCollection: IInputsCollection;
@@ -11,8 +12,8 @@ export interface IMenuDataCollectionsContext {
   onChangeInputFieldValue: (inputData: IInputsCollection) => void;
   onChangeDataCollection: (inputData: any) => void;
   addToDataCollections: (level: number, parentUniqueId?: string) => void;
-  navigateLevelDown: (uniqueId: string, inputValue: string) => void;
-  navigateLevelUp: (inputValue: string) => void;
+  navigateLevelDown: (uniqueId: string, levelTitle: string) => void;
+  navigateLevelUp: () => void;
   resetFieldsInputs: () => void;
   webPartPropertyBtnLabel: string;
   onWebPartPropsChanged: (dataCollections: IDataCollections[]) => void;
@@ -35,12 +36,12 @@ type ResetFieldsInputs = {
 
 type NavigateLevelDownAction = {
   type: Actions.NAVIGATE_LEVEL_DOWN;
-  payload: { currentLevel: number; parentUniqueId: string; inputValue: string };
+  payload: { currentLevel: number; parentUniqueId: string; levelTitle: string };
 };
 
 type NavigateLevelUpAction = {
   type: Actions.NAVIGATE_LEVEL_UP;
-  payload: { level: number; parentUniqueId: string; inputValue: string };
+  payload: { level: number; parentUniqueId: string; levelTitle: string };
 };
 
 type OnChangeInputValueAction = {
