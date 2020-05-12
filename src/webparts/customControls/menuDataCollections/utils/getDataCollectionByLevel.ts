@@ -5,8 +5,6 @@ export const getDataCollectionByLevel = (
   subLevel: number,
   parentUniqueId: string
 ): IDataCollections[] => {
-  console.log("subLevel", subLevel);
-  console.log("parentUniqueId", parentUniqueId);
   return subLevel === 1
     ? dataCollections.filter((d) => d.level === subLevel)
     : dataCollections.filter(

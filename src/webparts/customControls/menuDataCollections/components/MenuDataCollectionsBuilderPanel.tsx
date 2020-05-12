@@ -6,9 +6,13 @@ import {
   IconButton,
   Separator,
 } from "office-ui-fabric-react";
-import styles from "../styles/MenuDataCollection.module.scss";
-import { MenuItemsBuilder } from "./MenuItemsBuilder";
 import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
+import { TableRender } from "./TableRender";
+import { getDataCollectionByLevel } from "../utils/getDataCollectionByLevel";
+import { IInputsCollection } from "../interfaces/IInputsCollection";
+import { validateFields } from "../utils/validate";
+
+import styles from "../styles/MenuDataCollection.module.scss";
 
 export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
   const {
@@ -16,102 +20,16 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
     webPartPropertyBtnLabel,
     levelTitle,
     level,
+    fields,
+    parentUniqueId,
     onWebPartPropsChanged,
     dataCollections,
+    inputFormValuesCollection,
+    onChangeInputFieldValue,
   } = React.useContext(MenuDataCollectionsContext);
+
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
-  // const toggleMenuBuilderLevel = (
-  //   uniqueId: string,
-  //   titleInputValue: string
-  // ) => {
-  //   setTitleValue(titleInputValue);
-  //   setParentUniqueId(uniqueId);
-  //   setCurrentLevel((prevLevel) => prevLevel + 1);
-  // };
-
-  // const onRemoveFromDataCollections = (dataCollectionId: string): void => {
-  //   const newDataCollections: IDataCollections[] = [];
-  //   const currentDataCollectionToRemove = dataCollections.find(
-  //     (d) => d.uniqueId === dataCollectionId
-  //   );
-
-  //   if (currentDataCollectionToRemove) {
-  //     switch (currentDataCollectionToRemove.level) {
-  //       case 1:
-  //         const dataCollectionsL2Ids = dataCollections
-  //           .filter((d) => d.relationId === dataCollectionId)
-  //           .map((filteredData) => filteredData.uniqueId);
-
-  //         const dataCollectionsL3Removed = dataCollections.filter(
-  //           (d) =>
-  //             d.relationId !==
-  //             dataCollectionsL2Ids.find((id) => id === d.relationId)
-  //         );
-
-  //         newDataCollections.push(
-  //           ...dataCollectionsL3Removed.filter(
-  //             (d) =>
-  //               d.uniqueId !== dataCollectionId &&
-  //               d.relationId !== dataCollectionId
-  //           )
-  //         );
-  //         break;
-
-  //       case 2:
-  //         newDataCollections.push(
-  //           ...dataCollections.filter(
-  //             (d) =>
-  //               d.uniqueId !== dataCollectionId &&
-  //               d.relationId !== dataCollectionId
-  //           )
-  //         );
-
-  //         break;
-
-  //       case 3:
-  //         newDataCollections.push(
-  //           ...dataCollections.filter((d) => d.uniqueId !== dataCollectionId)
-  //         );
-
-  //         break;
-
-  //       default:
-  //         newDataCollections.push(...dataCollections);
-  //         break;
-  //     }
-  //   }
-
-  //   setDataCollections(newDataCollections);
-  // };
-
-  // const onChangeDataCollections = (
-  //   dataCollectionId: string,
-  //   fieldId: string,
-  //   newValue: string | boolean
-  // ): void => {
-  //   for (let dataCollection of dataCollections) {
-  //     if (dataCollection.uniqueId === dataCollectionId) {
-  //       dataCollection.fields[fieldId].value = newValue;
-  //     }
-  //   }
-
-  //   setDataCollections([...dataCollections]);
-  // };
-
-  // const handleClickBack = () => {
-  //   setCurrentLevel((prevCurrentLevel) =>
-  //     prevCurrentLevel !== 1 ? prevCurrentLevel - 1 : prevCurrentLevel
-  //   );
-  //   handleParentUniqueId();
-  //   navigateLevelUp("test");
-  // };
-
-  // const handleOnClose = (): void => {
-  //   setIsOpen(false);
-  //   setParentUniqueId("");
-  //   setTitleValue("");
-  // };
+  const [isValid, setIsValid] = React.useState(false);
 
   const onRenderHeader = (): JSX.Element => {
     return level !== 1 ? (
@@ -130,16 +48,31 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
     );
   };
 
-  // React.useEffect(() => {
-  //   if (currentLevel === 1) {
-  //     setParentUniqueId("");
-  //     setTitleValue("");
-  //   }
-  // }, [currentLevel]);
+  const validate = (inputs: IInputsCollection): void => {
+    // const existingDataCollection = dataCollections.find(dC=> dC.uniqueId === .)
+    // validateCollections(inputs, )
 
-  // useEffect(() => {
-  //   setDataCollections(value);
-  // }, [value]);
+    setIsValid(validateFields(inputs));
+  };
+
+  const setDefaultValue = React.useCallback(() => {
+    fields.map((field) => {
+      if (field.type === "custom") {
+        if (
+          inputFormValuesCollection[field.id] &&
+          !inputFormValuesCollection[field.id].value
+        ) {
+          inputFormValuesCollection[field.id].value = field.setDefaultValue();
+          onChangeInputFieldValue(inputFormValuesCollection);
+        }
+      }
+    });
+  }, [inputFormValuesCollection]);
+
+  React.useEffect(() => {
+    validate(inputFormValuesCollection);
+    setDefaultValue();
+  }, []);
 
   React.useEffect(() => {
     onWebPartPropsChanged(dataCollections);
@@ -160,7 +93,18 @@ export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
       >
         <div className={styles.menuDataCollectionPanelTable}>
           <Separator />
-          <MenuItemsBuilder onPanelDismiss={() => setIsOpen(false)} />
+          <TableRender
+            isValid={isValid}
+            inputFormValuesCollection={inputFormValuesCollection}
+            dataCollections={getDataCollectionByLevel(
+              dataCollections,
+              level,
+              parentUniqueId
+            )}
+          />
+          <div className={styles.panelActions}>
+            <DefaultButton text="Cancel" onClick={() => setIsOpen(false)} />
+          </div>
         </div>
       </Panel>
     </div>

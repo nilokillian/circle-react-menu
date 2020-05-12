@@ -3,74 +3,27 @@ import { IInputsCollection } from "../interfaces/IInputsCollection";
 import { initInputForm } from "../utils/initInputForm";
 import { ID } from "../utils/generateId";
 import {
-  IMenuDataState,
-  IActions,
   Actions,
   IMenuDataCollectionsContext,
 } from "./IMenuDataCollectionsContextTypes";
 import { usePreviousState } from "../hooks/usePreviousState";
 import { IDataCollections } from "../interfaces/IDataCollections";
-
-const reducer = (state: IMenuDataState, action: IActions) => {
-  switch (action.type) {
-    case Actions.RESET_FIELDS_INPUTS:
-      return {
-        ...state,
-        inputFormValuesCollection: action.payload,
-      };
-
-    case Actions.ON_CHANGE_INPUT_VALUE:
-      return {
-        ...state,
-        inputFormValuesCollection: action.payload,
-      };
-
-    case Actions.ON_CHANGE_DATA_COLLECTION:
-      return {
-        ...state,
-        dataCollections: action.payload,
-      };
-
-    case Actions.ADD_TO_DATA_COLLECTIONS:
-      return {
-        ...state,
-        inputFormValuesCollection: action.payload.inputFormValuesCollection,
-        dataCollections: action.payload.dataCollections,
-      };
-
-    case Actions.NAVIGATE_LEVEL_DOWN:
-      return {
-        ...state,
-        currentLevel: action.payload.currentLevel,
-        currentParentUniqueId: action.payload.parentUniqueId,
-        currentLevelTitle: action.payload.levelTitle,
-      };
-
-    case Actions.NAVIGATE_LEVEL_UP:
-      return {
-        ...state,
-        currentLevel: action.payload.level,
-        currentParentUniqueId:
-          action.payload.level === 1 ? "" : action.payload.parentUniqueId,
-        currentLevelTitle: action.payload.levelTitle,
-      };
-
-    default:
-      return state;
-  }
-};
+import { reducer } from "./reducer";
 
 const MenuDataCollectionsContext = React.createContext(
   {} as IMenuDataCollectionsContext
 );
+
 const MenuDataCollectionsContextProvider = (props: any) => {
+  //props from webpart
   const { fields, value, btnLabel, onWebPartPropsChanged } = props;
+
   const initialState = {
     currentLevel: 1,
     currentParentUniqueId: "",
     currentLevelTitle: "",
-    inputFormValuesCollection: initInputForm(fields),
-    dataCollections: value as IDataCollections[],
+    inputFormValuesCollection: initInputForm(fields), //creating scaleton for inputs based on webpart props fields
+    dataCollections: value as IDataCollections[], //value = dataCollections from wepbart props
   };
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -80,17 +33,81 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     uniqueId: state.currentParentUniqueId,
   });
 
-  const resetFieldsInputs = (): void => {
+  const removeDataCollection = (dataCollectionId: string): void => {
+    const { dataCollections } = state;
+    const newDataCollections: IDataCollections[] = [];
+    const currentDataCollectionToRemove = dataCollections.find(
+      (d) => d.uniqueId === dataCollectionId
+    );
+
+    if (currentDataCollectionToRemove) {
+      switch (currentDataCollectionToRemove.level) {
+        case 1:
+          const dataCollectionsL2Ids = dataCollections
+            .filter((d) => d.relationId === dataCollectionId)
+            .map((filteredData) => filteredData.uniqueId);
+
+          const dataCollectionsL3Removed = dataCollections.filter(
+            (d) =>
+              d.relationId !==
+              dataCollectionsL2Ids.find((id) => id === d.relationId)
+          );
+
+          newDataCollections.push(
+            ...dataCollectionsL3Removed.filter(
+              (d) =>
+                d.uniqueId !== dataCollectionId &&
+                d.relationId !== dataCollectionId
+            )
+          );
+          break;
+
+        case 2:
+          newDataCollections.push(
+            ...dataCollections.filter(
+              (d) =>
+                d.uniqueId !== dataCollectionId &&
+                d.relationId !== dataCollectionId
+            )
+          );
+
+          break;
+
+        case 3:
+          newDataCollections.push(
+            ...dataCollections.filter((d) => d.uniqueId !== dataCollectionId)
+          );
+
+          break;
+
+        default:
+          newDataCollections.push(...dataCollections);
+          break;
+      }
+    }
+
     dispatch({
-      type: Actions.RESET_FIELDS_INPUTS,
-      payload: initInputForm(fields),
+      type: Actions.REMOVE_DATA_COLLECTION,
+      payload: newDataCollections,
     });
   };
 
-  const onChangeDataCollection = (inputData: any): void => {
+  const onChangeDataCollection = (
+    dataCollectionId: string,
+    fieldId: string,
+    newValue: string
+  ): void => {
+    const { dataCollections } = state;
+
+    for (let dataCollection of dataCollections) {
+      if (dataCollection.uniqueId === dataCollectionId) {
+        dataCollection.fields[fieldId].value = newValue;
+      }
+    }
+
     dispatch({
       type: Actions.ON_CHANGE_DATA_COLLECTION,
-      payload: inputData,
+      payload: dataCollections,
     });
   };
 
@@ -101,6 +118,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     });
   };
 
+  // add new collection to dataCollections array
   const addToDataCollections = (level: number): void => {
     dispatch({
       type: Actions.ADD_TO_DATA_COLLECTIONS,
@@ -119,6 +137,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
     });
   };
 
+  // toggle level, depth + 1 / filter dataCollections correspondingly / clear inputs
   const navigateLevelDown = (
     parentUniqueId: string,
     levelTitle: string
@@ -129,10 +148,12 @@ const MenuDataCollectionsContextProvider = (props: any) => {
         currentLevel: state.currentLevel + 1,
         levelTitle,
         parentUniqueId: parentUniqueId,
+        inputFormValuesCollection: initInputForm(fields),
       },
     });
   };
 
+  // toggle level, depth - 1 / filter dataCollections correspondingly / clear inputs
   const navigateLevelUp = (): void => {
     dispatch({
       type: Actions.NAVIGATE_LEVEL_UP,
@@ -143,9 +164,11 @@ const MenuDataCollectionsContextProvider = (props: any) => {
             ? state.currentLevel - 1
             : state.currentLevel,
         parentUniqueId: parentPrevState.uniqueId,
+        inputFormValuesCollection: initInputForm(fields),
       },
     });
   };
+
   return (
     <MenuDataCollectionsContext.Provider
       value={{
@@ -160,7 +183,7 @@ const MenuDataCollectionsContextProvider = (props: any) => {
         navigateLevelDown,
         navigateLevelUp,
         addToDataCollections,
-        resetFieldsInputs,
+        removeDataCollection,
         webPartPropertyBtnLabel: btnLabel,
         onWebPartPropsChanged,
       }}

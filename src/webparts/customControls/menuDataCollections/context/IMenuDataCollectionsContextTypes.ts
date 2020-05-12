@@ -10,38 +10,51 @@ export interface IMenuDataCollectionsContext {
   inputFormValuesCollection: IInputsCollection;
   dataCollections: IDataCollections[];
   onChangeInputFieldValue: (inputData: IInputsCollection) => void;
-  onChangeDataCollection: (inputData: any) => void;
+  onChangeDataCollection: (
+    dataCollectionId: string,
+    fieldId: string,
+    newValue: string | boolean
+  ) => void;
   addToDataCollections: (level: number, parentUniqueId?: string) => void;
   navigateLevelDown: (uniqueId: string, levelTitle: string) => void;
   navigateLevelUp: () => void;
-  resetFieldsInputs: () => void;
+  removeDataCollection: (dataCollectionId: string) => void;
   webPartPropertyBtnLabel: string;
   onWebPartPropsChanged: (dataCollections: IDataCollections[]) => void;
 }
 
 export enum Actions {
-  RESET_FIELDS_INPUTS = "RESET_FIELDS_INPUTS",
   ON_CHANGE_INPUT_VALUE = "ON_CHANGE_INPUT_VALUE",
   ON_CHANGE_DATA_COLLECTION = "ON_CHANGE_DATA_COLLECTION",
   ADD_TO_DATA_COLLECTIONS = "ADD_TO_DATA_COLLECTIONS",
-  REMOVE_FROM_DATA_COLLECTIONS = "REMOVE_FROM_DATA_COLLECTIONS",
+  REMOVE_DATA_COLLECTION = "REMOVE_DATA_COLLECTION",
   NAVIGATE_LEVEL_DOWN = "NAVIGATE_LEVEL_DOWN",
   NAVIGATE_LEVEL_UP = "NAVIGATE_LEVEL_UP",
 }
 
-type ResetFieldsInputs = {
-  type: Actions.RESET_FIELDS_INPUTS;
-  payload: IInputsCollection;
+type RemoveDataCollection = {
+  type: Actions.REMOVE_DATA_COLLECTION;
+  payload: IDataCollections[];
 };
 
 type NavigateLevelDownAction = {
   type: Actions.NAVIGATE_LEVEL_DOWN;
-  payload: { currentLevel: number; parentUniqueId: string; levelTitle: string };
+  payload: {
+    currentLevel: number;
+    parentUniqueId: string;
+    levelTitle: string;
+    inputFormValuesCollection: IInputsCollection;
+  };
 };
 
 type NavigateLevelUpAction = {
   type: Actions.NAVIGATE_LEVEL_UP;
-  payload: { level: number; parentUniqueId: string; levelTitle: string };
+  payload: {
+    level: number;
+    parentUniqueId: string;
+    levelTitle: string;
+    inputFormValuesCollection: IInputsCollection;
+  };
 };
 
 type OnChangeInputValueAction = {
@@ -63,7 +76,7 @@ type OnChangeDataCollection = {
 };
 
 export type IActions =
-  | ResetFieldsInputs
+  | RemoveDataCollection
   | OnChangeInputValueAction
   | AddToDataCollections
   | OnChangeDataCollection

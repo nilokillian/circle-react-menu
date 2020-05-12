@@ -6,21 +6,21 @@ import { ID } from "../utils/generateId";
 import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
-  level,
   isValid,
   dataCollections,
   inputFormValuesCollection,
-  // onRemoveDataCollection,
-  // onChangeDataCollection,
 }) => {
   const {
+    level,
     fields,
     navigateLevelDown,
     addToDataCollections,
+    removeDataCollection,
     onChangeInputFieldValue,
+    onChangeDataCollection,
   } = React.useContext(MenuDataCollectionsContext);
 
-  const onFieldValueChange = (
+  const onInputFormValueChange = (
     event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue?: string | boolean
   ): void => {
@@ -29,11 +29,11 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     onChangeInputFieldValue(inputFormValuesCollection);
   };
 
-  const onExistingFieldValueChange = (
+  const onDataCollectionValueChange = (
     event: any,
     newValue?: string | boolean
   ) => {
-    const dataCollectionId = event.target.getAttribute("data-set");
+    const dataCollectionId = event.target.getAttribute("data-set") as string;
     const fieldId = event.target["name"];
 
     onChangeDataCollection(dataCollectionId, fieldId, newValue);
@@ -77,7 +77,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                       inputFormValuesCollection[field.id] &&
                       (inputFormValuesCollection[field.id].value as string)
                     }
-                    onChange={onFieldValueChange}
+                    onChange={onInputFormValueChange}
                     required
                   />
                 </span>
@@ -94,7 +94,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                         ? (inputFormValuesCollection[field.id].value as boolean)
                         : false
                     }
-                    onChange={onFieldValueChange}
+                    onChange={onInputFormValueChange}
                   />
                 </span>
               );
@@ -145,7 +145,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                       name={field.id}
                       data-set={dataCollection.uniqueId}
                       value={dataCollection.fields[field.id].value as string}
-                      onChange={onExistingFieldValueChange}
+                      onChange={onDataCollectionValueChange}
                       required
                     />
                   </span>
@@ -158,7 +158,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
                       name={field.id}
                       data-set={dataCollection.uniqueId}
                       checked={dataCollection.fields[field.id].value as boolean}
-                      onChange={onExistingFieldValueChange}
+                      onChange={onDataCollectionValueChange}
                     />
                   </span>
                 );
@@ -194,7 +194,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
           <span className={`${styles.tableCell} ${styles.inputField}`}>
             <IconButton
               iconProps={{ iconName: "Cancel" }}
-              onClick={() => onRemoveDataCollection(dataCollection.uniqueId)}
+              onClick={() => removeDataCollection(dataCollection.uniqueId)}
             />
           </span>
         </div>
