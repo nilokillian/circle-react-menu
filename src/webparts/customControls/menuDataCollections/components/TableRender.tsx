@@ -1,9 +1,10 @@
 import * as React from "react";
-import styles from "../styles/MenuDataCollection.module.scss";
+import { ID } from "../utils/generateId";
 import { TextField, Checkbox, IconButton } from "office-ui-fabric-react";
 import { ITableRenderProps } from "../interfaces/ITableRenderProps";
-import { ID } from "../utils/generateId";
 import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
+
+import styles from "../styles/MenuDataCollection.module.scss";
 
 export const TableRender: React.FC<ITableRenderProps> = ({
   isValid,
@@ -54,6 +55,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     onChangeDataCollection(dataCollectionId, fieldId, newValue);
   };
 
+  // Headers
   const renderTableHeaders = (): JSX.Element[] => {
     return fields.map((field) => (
       <span className={`${styles.tableHead} ${styles.tableCell}`}>
@@ -62,6 +64,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     ));
   };
 
+  //Inputs
   const renderFormInputFields = (): JSX.Element => {
     return (
       <>
@@ -126,6 +129,7 @@ export const TableRender: React.FC<ITableRenderProps> = ({
     );
   };
 
+  // Data Collections
   const renderDataCollectionsValues = (): JSX.Element[] | JSX.Element => {
     if (dataCollections.length === 0) {
       return (

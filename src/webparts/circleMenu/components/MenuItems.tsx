@@ -103,7 +103,7 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
         className={`${styles.menuItem} ${styles.itemShow}`}
         style={styling}
         onClick={(e) => {
-          setCurrentX(e.pageX);
+          setCurrentX(e.screenX);
           setActiveMenu(item);
           setCallOutVis(true);
         }}
