@@ -1,5 +1,4 @@
 import * as React from "react";
-import { SPPermission } from "@microsoft/sp-page-context";
 import { WebPartPropsContext } from "../contexts/WebPartPropsContext";
 import {
   ContextualMenuItemType,
@@ -8,28 +7,36 @@ import {
   IContextualMenuItemProps,
 } from "office-ui-fabric-react/lib/ContextualMenu";
 import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { ICard } from "../interfaces/ICard";
-import {
-  SecurityTrimmedControl,
-  PermissionLevel,
-} from "@pnp/spfx-controls-react/lib/SecurityTrimmedControl";
+import { checkRemoteWebPermissions } from "../utils/api";
+import { IAnimatedMwnuItem } from "../interfaces/IAnimatedMwnuItem";
+import { DetailsCalloutComponent } from "./DetailsCalloutComponent";
 
-export const CardContextualMenu: React.FC<ICard> = (props): JSX.Element => {
-  const { pageContext } = React.useContext(WebPartPropsContext);
+export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
+  props
+): JSX.Element => {
+  const { context: ctx } = React.useContext(WebPartPropsContext);
+
   const composeItems = (items: any[]): IContextualMenuItem[] => {
     const tempArr: IContextualMenuItem[] = [];
     items.map((i) => {
-      tempArr.push({
-        key: i.title,
-        text: i.title,
-        href: i.url,
-      });
+      checkRemoteWebPermissions(i.url, ctx)
+        .then((res) => {
+          if (res.value) {
+            tempArr.push({
+              key: i.title,
+              text: i.title,
+              href: i.url,
+            });
 
-      tempArr.push({
-        key: "divider_1",
-        itemType: ContextualMenuItemType.Divider,
-      });
+            tempArr.push({
+              key: "divider_1",
+              itemType: ContextualMenuItemType.Divider,
+            });
+          }
+        })
+        .catch((err) => console.log(err));
     });
+
     return tempArr;
   };
 
@@ -37,25 +44,25 @@ export const CardContextualMenu: React.FC<ICard> = (props): JSX.Element => {
     () => ({
       items: composeItems(props.subMenu),
       shouldFocusOnMount: true,
+      styles: { list: { width: 195 } },
       contextualMenuItemAs: (menuItemProps: IContextualMenuItemProps) => (
-        <SecurityTrimmedControl
-          context={pageContext}
-          level={PermissionLevel.remoteWeb}
-          remoteSiteUrl={menuItemProps.item.href}
-          permissions={[SPPermission.viewListItems]}
-        >
-          <div>{menuItemProps.item.text}</div>
-        </SecurityTrimmedControl>
+        <div>{menuItemProps.item.text}</div>
       ),
     }),
-    [composeItems(props.subMenu)]
+    [props.subMenu]
   );
 
   return (
-    <DefaultButton
-      text={props.title}
-      menuProps={menuProps}
-      styles={{ menuIcon: { display: "none" }, root: { width: 197 } }}
-    />
+    <>
+      <DetailsCalloutComponent />
+      <DefaultButton
+        text="Links"
+        menuProps={menuProps}
+        styles={{
+          menuIcon: { display: "none" },
+          root: { width: 197, fontSize: 12 },
+        }}
+      />
+    </>
   );
 };

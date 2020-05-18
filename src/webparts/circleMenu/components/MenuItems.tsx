@@ -10,6 +10,7 @@ import {
   ITooltipHostStyles,
 } from "office-ui-fabric-react";
 import { Card } from "./Card";
+import { IAnimatedMwnuItem } from "../interfaces/IAnimatedMwnuItem";
 
 const theme = getTheme();
 const hostStyles: Partial<ITooltipHostStyles> = {
@@ -29,7 +30,10 @@ const fabricStyles = mergeStyleSets({
     maxWidth: 300,
   },
   header: {
-    padding: "18px 24px 12px",
+    padding: "10px 5px 5px",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: 300,
   },
   title: [
     theme.fonts.xLarge,
@@ -66,7 +70,9 @@ const fabricStyles = mergeStyleSets({
 export const MenuItems = ({ centreToCircle, items, open }) => {
   const [callOutVis, setCallOutVis] = React.useState(false);
   const [currentX, setCurrentX] = React.useState<number>();
-  const [activeMenu, setActiveMenu] = React.useState();
+  const [activeMenu, setActiveMenu] = React.useState<IAnimatedMwnuItem>(
+    {} as IAnimatedMwnuItem
+  );
   const btnRef = React.useRef();
 
   const getDirectionalHint = ():
@@ -120,7 +126,6 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
             aria-describedby={item.title}
           />
         </TooltipHost>
-        {/* <i className={"fa " + item.icon} aria-hidden="true"></i> */}
       </div>
     );
   });
@@ -144,7 +149,7 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
           onDismiss={() => setCallOutVis(false)}
           setInitialFocus={true}
         >
-          <div className={fabricStyles.header}></div>
+          <div className={fabricStyles.header}>{activeMenu.title}</div>
           <div className={fabricStyles.inner}>
             <Card {...activeMenu} />
           </div>

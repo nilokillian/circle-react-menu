@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ImageFit, Image } from "office-ui-fabric-react";
 import { CardContextualMenu } from "./CardContextualMenu";
-import { ICard } from "../interfaces/ICard";
+import { IAnimatedMwnuItem } from "../interfaces/IAnimatedMwnuItem";
 
-export const Card: React.FC<ICard> = (props) => {
+export const Card: React.FC<IAnimatedMwnuItem> = React.memo((props) => {
   return (
     <div style={{ width: 200 }}>
       <Image
@@ -14,4 +14,4 @@ export const Card: React.FC<ICard> = (props) => {
       <CardContextualMenu {...props} />
     </div>
   );
-};
+});

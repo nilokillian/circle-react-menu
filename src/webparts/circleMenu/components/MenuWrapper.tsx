@@ -1,8 +1,9 @@
 import * as React from "react";
 import { MemoizedMenu } from "./Menu";
 import { InnerCircle } from "./InnerCircle";
-import { MenuToggle } from "./MenuToggle";
+// import { MenuToggle } from "./MenuToggle";
 import { WebPartPropsContext } from "../contexts/WebPartPropsContext";
+import { Guideline } from "./Guideline";
 
 export interface IMenuWrapperProps {
   menuItems: any[];
@@ -49,12 +50,7 @@ export const MenuWrapper = (): JSX.Element => {
     const stagger = (i: number) => {
       if (i < length) {
         setTimeout(() => {
-          // let items = makeMenu(menuItems);
-          // let items = currentMenuItems;
-          //   let showing = currentMenuItems[i].show;
-
           items[i].show = true;
-
           setAnimatedMenuItems([...items]);
           stagger(i + 1);
         }, 70);
@@ -71,6 +67,7 @@ export const MenuWrapper = (): JSX.Element => {
 
   return (
     <div>
+      <Guideline items={animatedMenuItems} />
       <InnerCircle />
       <MemoizedMenu centreToCircle={centreToCircle} items={animatedMenuItems} />
     </div>

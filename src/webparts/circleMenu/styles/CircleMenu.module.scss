@@ -1,127 +1,156 @@
-.menuItem {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 6em;
-  width: 6em;
-  margin: -3em;
-  text-align: center;
-  display: flex;
-  border-radius: 50%;
-  box-shadow: 10px 10px 10px -11px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+.circleMenu {
+  .container {
+    height: 400px;
+    padding: 0px;
+    margin: 0px;
+    width: auto;
+    // background: #303c54;
+    //max-width: 700px;
+    margin: 0px;
+    // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 
-  i {
-    color: white;
-    font-size: 2em;
-    display: flex;
-    margin: auto;
-    transition: font-size 0.1s ease-out;
-  }
+    .guideline {
+      position: absolute;
+      top: 3px;
+      z-index: 300;
 
-  &:hover {
-    height: 7em;
-    width: 7em;
-    margin: -3.5em;
+      .iconContainer {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+      }
 
-    i {
-      font-size: 2.5em;
+      .iconTitle {
+        margin-left: 10px;
+      }
     }
-  }
-}
 
-.itemShow {
-  opacity: 1;
-  transition: height 0.1s ease-out, width 0.1s ease-out, margin 0.1s ease-out,
-    opacity 0.5s ease-out;
-}
+    .menuItem {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 6em;
+      width: 6em;
+      margin: -3em;
+      text-align: center;
+      display: flex;
+      border-radius: 50%;
+      box-shadow: 10px 10px 10px -11px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
 
-.itemHide {
-  opacity: 0;
-}
+      i {
+        color: white;
+        font-size: 2em;
+        display: flex;
+        margin: auto;
+        transition: font-size 0.1s ease-out;
+      }
 
-.menuBackground {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  z-index: 100;
-  background-color: #ffffff;
-  // background-color: #f0e8d1;
-}
+      &:hover {
+        height: 7em;
+        width: 7em;
+        margin: -3.5em;
 
-.buttonBg {
-  position: relative;
-  height: 18em;
-  width: 18em;
-  border-radius: 50%;
-  margin: 1.75em auto 0;
-  z-index: 1000;
-  top: 50%;
-  margin-top: -9em;
-}
+        i {
+          font-size: 2.5em;
+        }
+      }
+    }
 
-.menuToggle {
-  position: absolute;
-  z-index: 2000;
-  margin-top: 2em;
-  margin-left: 2em;
-  height: 6em;
-  width: 6em;
-  border-radius: 50%;
-  background-color: transparent;
-  outline: none;
+    .itemShow {
+      opacity: 1;
+      transition: height 0.1s ease-out, width 0.1s ease-out,
+        margin 0.1s ease-out, opacity 0.5s ease-out;
+    }
 
-  i {
-    font-size: 20px;
-  }
-}
+    .itemHide {
+      opacity: 0;
+    }
 
-.toggleOpen {
-  border: 2px solid #f2f2f2;
-  color: #f2f2f2;
-  top: 50%;
-  left: 50%;
-  margin-top: -3em;
-  margin-left: -3em;
-  animation: fadeIn 1s 1 ease-in;
-}
+    .menuBackground {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      z-index: 100;
+      background-color: #ffffff;
+      // background-color: #f0e8d1;
+    }
 
-.toggleClosed {
-  border: 3px solid white;
-  color: white;
-}
+    .buttonBg {
+      position: relative;
+      height: 18em;
+      width: 18em;
+      border-radius: 50%;
+      margin: 1.75em auto 0;
+      z-index: 1000;
+      top: 50%;
+      margin-top: -9em;
+    }
 
-.menuWrapperOpen {
-  opacity: 1;
-  visibility: visible;
-  transition: all 0.2s ease-out;
-}
+    .menuToggle {
+      position: absolute;
+      z-index: 2000;
+      margin-top: 2em;
+      margin-left: 2em;
+      height: 6em;
+      width: 6em;
+      border-radius: 50%;
+      background-color: transparent;
+      outline: none;
 
-.menuWrapperClosed {
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s ease-out;
-}
+      i {
+        font-size: 20px;
+      }
+    }
 
-.animateMenu {
-  animation: spin 1.3s 1 cubic-bezier(0.175, 0.585, 0.08, 1.2);
-  animation-delay: 0.2s;
-}
+    .toggleOpen {
+      border: 2px solid #f2f2f2;
+      color: #f2f2f2;
+      top: 50%;
+      left: 50%;
+      margin-top: -3em;
+      margin-left: -3em;
+      animation: fadeIn 1s 1 ease-in;
+    }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+    .toggleClosed {
+      border: 3px solid white;
+      color: white;
+    }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+    .menuWrapperOpen {
+      opacity: 1;
+      visibility: visible;
+      transition: all 0.2s ease-out;
+    }
+
+    .menuWrapperClosed {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease-out;
+    }
+
+    .animateMenu {
+      animation: spin 1.3s 1 cubic-bezier(0.175, 0.585, 0.08, 1.2);
+      animation-delay: 0.2s;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
   }
 }
