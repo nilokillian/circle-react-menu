@@ -2,7 +2,7 @@ import * as React from "react";
 import { MemoizedMenu } from "./Menu";
 import { InnerCircle } from "./InnerCircle";
 // import { MenuToggle } from "./MenuToggle";
-import { WebPartPropsContext } from "../contexts/WebPartPropsContext";
+import { WebPartPropsContext } from "../contexts/webpart-context/WebPartPropsContext";
 import { Guideline } from "./Guideline";
 
 export interface IMenuWrapperProps {
@@ -23,19 +23,22 @@ export const MenuWrapper = (): JSX.Element => {
     let rotation = 0;
     const makeMenuItems = [];
 
-    menuConfig.forEach(({ color, icon, title, imageUrl, subMenu }) => {
-      makeMenuItems.push({
-        color,
-        icon,
-        title,
-        imageUrl,
-        subMenu,
-        rotation,
-        angle,
-        show: false,
-      });
-      rotation += angle;
-    });
+    menuConfig.forEach(
+      ({ color, icon, title, imageUrl, extraInfoId, subMenu }) => {
+        makeMenuItems.push({
+          color,
+          icon,
+          title,
+          imageUrl,
+          extraInfoId,
+          subMenu,
+          rotation,
+          angle,
+          show: false,
+        });
+        rotation += angle;
+      }
+    );
 
     return makeMenuItems;
   };

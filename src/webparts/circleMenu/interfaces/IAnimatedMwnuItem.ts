@@ -6,5 +6,6 @@ export interface IAnimatedMwnuItem {
   subMenu: any[];
   rotation: number;
   angle: number;
+  extraInfoId: string;
   show: boolean;
 }

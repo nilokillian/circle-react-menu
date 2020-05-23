@@ -1,14 +1,8 @@
 import * as React from "react";
 import { createContext } from "react";
-import { IWebPartPropsContextProps } from "../interfaces/IWebPartPropsContextProps";
-import { IMenuItemsCollection } from "../interfaces/IMenuItemsCollection";
-import { WebPartContext } from "@microsoft/sp-webpart-base";
-
-export interface IWebPartPropsContext {
-  menuItems: IMenuItemsCollection[];
-  centreToCircle: number;
-  context: WebPartContext;
-}
+import { IWebPartPropsContextProps } from "../../interfaces/IWebPartPropsContextProps";
+import { IMenuItemsCollection } from "../../interfaces/IMenuItemsCollection";
+import { IWebPartPropsContext } from "./interfaces/IWebPartPropsContext";
 
 export const WebPartPropsContext = createContext<IWebPartPropsContext>(
   {} as IWebPartPropsContext
@@ -34,6 +28,7 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
           imageUrl: itemsCollection.fields["imageUrl"].value,
           icon: itemsCollection.fields["icon"].value,
           color: itemsCollection.fields["colour"].value,
+          extraInfoId: itemsCollection.fields["extraInfoId"].value,
           subMenu:
             itemsCollection.level <= 3 &&
             getSubItems(menuItemsCollections, itemsCollection.uniqueId),
@@ -55,6 +50,7 @@ export const WebPartPropsContextProvider: React.FC<IWebPartPropsContextProps> = 
           icon: collection.fields["icon"].value,
           imageUrl: collection.fields["imageUrl"].value,
           color: collection.fields["colour"].value,
+          extraInfoId: collection.fields["extraInfoId"].value,
           subMenu: getSubItems(menuItemsCollections, collection.uniqueId),
         });
       }

@@ -67,7 +67,7 @@ export const DetailsCalloutComponent: React.FC = (): JSX.Element => {
           text="Core Functions"
           styles={{
             menuIcon: { display: "none" },
-            root: { width: 197, marginBottom: 4, fontSize: 12 },
+            root: { width: 140, marginBottom: 4, fontSize: 12 },
           }}
           onClick={() => onHandleCallOut("coreFunctions")}
         />
@@ -79,7 +79,7 @@ export const DetailsCalloutComponent: React.FC = (): JSX.Element => {
           text="Key Metrics"
           styles={{
             menuIcon: { display: "none" },
-            root: { width: 197, marginBottom: 4, fontSize: 12 },
+            root: { width: 140, marginBottom: 4, fontSize: 12 },
           }}
         />
       </div>

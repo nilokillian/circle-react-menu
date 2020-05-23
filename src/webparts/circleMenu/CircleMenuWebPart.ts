@@ -102,6 +102,11 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
                       type: CustomMenuDataCollectionFieldType.string,
                     },
                     {
+                      id: "extraInfoId",
+                      title: "Extra Info ID",
+                      type: CustomMenuDataCollectionFieldType.string,
+                    },
+                    {
                       id: "colour",
                       title: "Colour",
                       type: CustomMenuDataCollectionFieldType.custom,

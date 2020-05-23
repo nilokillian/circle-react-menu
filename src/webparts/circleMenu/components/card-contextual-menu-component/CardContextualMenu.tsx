@@ -1,15 +1,18 @@
 import * as React from "react";
-import { WebPartPropsContext } from "../contexts/WebPartPropsContext";
+import { WebPartPropsContext } from "../../contexts/webpart-context/WebPartPropsContext";
 import {
   ContextualMenuItemType,
   IContextualMenuItem,
   IContextualMenuProps,
   IContextualMenuItemProps,
-} from "office-ui-fabric-react/lib/ContextualMenu";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { checkRemoteWebPermissions } from "../utils/api";
-import { IAnimatedMwnuItem } from "../interfaces/IAnimatedMwnuItem";
-import { DetailsCalloutComponent } from "./DetailsCalloutComponent";
+  DefaultButton,
+} from "office-ui-fabric-react";
+import { checkRemoteWebPermissions } from "../../utils/api";
+import { IAnimatedMwnuItem } from "../../interfaces/IAnimatedMwnuItem";
+import { DetailsCalloutComponent } from "../DetailsCalloutComponent";
+
+import { cardContextualMenuBtnStyle } from "../../styles/fabricStyles";
+import styles from "./CardContextualMenuStyle.module.scss";
 
 export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
   props
@@ -53,16 +56,13 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
   );
 
   return (
-    <>
+    <div className={styles.cardContextualMenuContainer}>
       <DetailsCalloutComponent />
       <DefaultButton
         text="Links"
         menuProps={menuProps}
-        styles={{
-          menuIcon: { display: "none" },
-          root: { width: 197, fontSize: 12 },
-        }}
+        styles={cardContextualMenuBtnStyle}
       />
-    </>
+    </div>
   );
 };

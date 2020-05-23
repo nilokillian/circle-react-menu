@@ -1,0 +1,57 @@
+.menuItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 6em;
+  width: 6em;
+  margin: -3em;
+  text-align: center;
+  display: flex;
+  border-radius: 50%;
+  box-shadow: 10px 10px 10px -11px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  i {
+    color: white;
+    font-size: 2em;
+    display: flex;
+    margin: auto;
+    transition: font-size 0.1s ease-out;
+  }
+
+  &:hover {
+    height: 7em;
+    width: 7em;
+    margin: -3.5em;
+
+    i {
+      font-size: 2.5em;
+    }
+  }
+}
+
+.itemShow {
+  opacity: 1;
+  transition: height 0.1s ease-out, width 0.1s ease-out, margin 0.1s ease-out,
+    opacity 0.5s ease-out;
+}
+
+.itemHide {
+  opacity: 0;
+}
+
+.buttonBg {
+  position: relative;
+  height: 18em;
+  width: 18em;
+  border-radius: 50%;
+  margin: 1.75em auto 0;
+  z-index: 1000;
+  top: 50%;
+  margin-top: -9em;
+}
+
+.animateMenu {
+  animation: spin 1.3s 1 cubic-bezier(0.175, 0.585, 0.08, 1.2);
+  animation-delay: 0.2s;
+}

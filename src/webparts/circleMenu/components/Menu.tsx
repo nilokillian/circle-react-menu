@@ -1,6 +1,6 @@
 import * as React from "react";
 import styles from "../styles/CircleMenu.module.scss";
-import { MenuItems } from "./MenuItems";
+import { MenuItems } from "./menu-items-component/MenuItems";
 
 const Menu = ({ centreToCircle, items }) => (
   <div className={styles.menuWrapperOpen}>
