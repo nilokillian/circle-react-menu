@@ -14,6 +14,7 @@ import { initializeIcons } from "@uifabric/icons";
 import { getColourPickerJSXElement } from "./customFieldControls/ColourPickerComponent";
 import { PropertyMenuDataCollections } from "../customControls/menuDataCollections/propertyMenuDataCollections";
 import { CustomMenuDataCollectionFieldType } from "../customControls/menuDataCollections/constants/customMenuDataCollectionFieldType";
+import SharePointService from "./services/SharePointService";
 
 export default class CircleMenuWebPart extends BaseClientSideWebPart<
   ICircleMenuWebPartProps
@@ -37,6 +38,8 @@ export default class CircleMenuWebPart extends BaseClientSideWebPart<
 
   public async onInit(): Promise<void> {
     await super.onInit();
+    SharePointService.setup(this.context);
+    SharePointService.pnp_setup(this.context);
     initializeIcons();
   }
 

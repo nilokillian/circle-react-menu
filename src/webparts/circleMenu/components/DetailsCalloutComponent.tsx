@@ -4,6 +4,7 @@ import {
   DirectionalHint,
   DefaultButton,
 } from "office-ui-fabric-react";
+import { IDivisionContext } from "../contexts/division-context/interfaces/IDivisionContext";
 // import { callOutStyle } from "../styles/styledObjects";
 
 export interface ICalloutComponentProps {
@@ -14,20 +15,13 @@ export interface ICalloutComponentProps {
   onDismiss: () => void;
 }
 
-const coreFunctiionsData = [
-  "Payroll",
-  "Accounts Payables",
-  "Transaction Services",
-  "Systems Accounting",
-];
+export interface IDetailsCalloutComponentProps {
+  details: any | IDivisionContext;
+}
 
-const keyMetricsData = [
-  "6,000 Employees",
-  "5,000 Suppliers",
-  "2,000 Customers",
-];
-
-export const DetailsCalloutComponent: React.FC = (): JSX.Element => {
+export const DetailsCalloutComponent: React.FC<IDetailsCalloutComponentProps> = ({
+  details,
+}): JSX.Element => {
   const coreFunctionsRef = React.useRef();
   const keyMetricsRef = React.useRef();
   const [callOutOpen, setCallOutOpen] = React.useState(false);
@@ -85,7 +79,7 @@ export const DetailsCalloutComponent: React.FC = (): JSX.Element => {
       </div>
       {callOutOpen && (
         <Callout
-          style={{ width: 197 }}
+          style={{ width: 300 }}
           gapSpace={0}
           target={
             currentCalloutName === "coreFunctions"
@@ -94,14 +88,14 @@ export const DetailsCalloutComponent: React.FC = (): JSX.Element => {
           }
           isBeakVisible={false}
           onDismiss={() => setCallOutOpen(false)}
-          directionalHint={DirectionalHint.topCenter}
+          directionalHint={DirectionalHint.rightCenter}
           setInitialFocus={true}
           coverTarget={true}
         >
           <div className="inner">
             {currentCalloutName === "coreFunctions"
-              ? coreFunctionsElement(coreFunctiionsData)
-              : keyMetricsElement(keyMetricsData)}
+              ? coreFunctionsElement(details.functions)
+              : keyMetricsElement(details.keyMetrics)}
           </div>
         </Callout>
       )}

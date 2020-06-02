@@ -1,5 +1,6 @@
 import * as React from "react";
 import { WebPartPropsContext } from "../../contexts/webpart-context/WebPartPropsContext";
+import { DivisionContext } from "../../contexts/division-context/DivisionsContext";
 import {
   ContextualMenuItemType,
   IContextualMenuItem,
@@ -10,7 +11,6 @@ import {
 import { checkRemoteWebPermissions } from "../../utils/api";
 import { IAnimatedMwnuItem } from "../../interfaces/IAnimatedMwnuItem";
 import { DetailsCalloutComponent } from "../DetailsCalloutComponent";
-
 import { cardContextualMenuBtnStyle } from "../../styles/fabricStyles";
 import styles from "./CardContextualMenuStyle.module.scss";
 
@@ -18,26 +18,47 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
   props
 ): JSX.Element => {
   const { context: ctx } = React.useContext(WebPartPropsContext);
+  const divisions = React.useContext(DivisionContext);
+
+  const getDevisionInfo = () => {
+    const devision = divisions.find((d) => d.extraInfoId === props.extraInfoId);
+    return devision ? devision : {};
+  };
 
   const composeItems = (items: any[]): IContextualMenuItem[] => {
     const tempArr: IContextualMenuItem[] = [];
+    const tenantUri = window.location.protocol + "//" + window.location.host;
     items.map((i) => {
-      checkRemoteWebPermissions(i.url, ctx)
-        .then((res) => {
-          if (res.value) {
-            tempArr.push({
-              key: i.title,
-              text: i.title,
-              href: i.url,
-            });
+      const currentlink: string = i.url;
 
-            tempArr.push({
-              key: "divider_1",
-              itemType: ContextualMenuItemType.Divider,
-            });
-          }
-        })
-        .catch((err) => console.log(err));
+      if (currentlink.indexOf(tenantUri) > -1) {
+        checkRemoteWebPermissions(i.url, ctx)
+          .then((res) => {
+            if (res.value) {
+              tempArr.push({
+                key: i.title,
+                text: i.title,
+                href: i.url,
+              });
+
+              tempArr.push({
+                key: "divider_1",
+                itemType: ContextualMenuItemType.Divider,
+              });
+            }
+          })
+          .catch((err) => console.log(err));
+      } else {
+        tempArr.push({
+          key: i.title,
+          text: i.title,
+          href: i.url,
+        });
+        tempArr.push({
+          key: "divider_1",
+          itemType: ContextualMenuItemType.Divider,
+        });
+      }
     });
 
     return tempArr;
@@ -47,7 +68,7 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
     () => ({
       items: composeItems(props.subMenu),
       shouldFocusOnMount: true,
-      styles: { list: { width: 195 } },
+      styles: { list: { width: 140 }, container: { width: 140 } },
       contextualMenuItemAs: (menuItemProps: IContextualMenuItemProps) => (
         <div>{menuItemProps.item.text}</div>
       ),
@@ -57,7 +78,7 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
 
   return (
     <div className={styles.cardContextualMenuContainer}>
-      <DetailsCalloutComponent />
+      <DetailsCalloutComponent details={getDevisionInfo()} />
       <DefaultButton
         text="Links"
         menuProps={menuProps}

@@ -1,73 +1,112 @@
-import Snap from "snapsvg-cjs";
+import * as React from "react";
+import {
+  Panel,
+  PanelType,
+  DefaultButton,
+  IconButton,
+  Separator,
+} from "office-ui-fabric-react";
+import { MenuDataCollectionsContext } from "../context/MenuDataCollectionsContext";
+import { TableRender } from "./TableRender";
+import { getDataCollectionByLevel } from "../utils/getDataCollectionByLevel";
+import { IInputsCollection } from "../interfaces/IInputsCollection";
+import { validateFields } from "../utils/validate";
 
-export const getXYScale = (
-  officeId: string,
-  styleId: string,
-  containerId: string
-) => {
-  const container = document.getElementById(containerId);
+import styles from "../styles/MenuDataCollection.module.scss";
 
-  const pos = getPositions(officeId, styleId);
+export const MenuDataCollectionsBuilderPanel: React.FC = (): JSX.Element => {
+  const {
+    navigateLevelUp,
+    webPartPropertyBtnLabel,
+    levelTitle,
+    level,
+    fields,
+    parentUniqueId,
+    onWebPartPropsChanged,
+    dataCollections,
+    inputFormValuesCollection,
+    onChangeInputFieldValue,
+  } = React.useContext(MenuDataCollectionsContext);
 
-  const x = container.clientWidth / 2 - (pos.R.x + pos.R.w / 2) * 1.5; // calculating x translate
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [isValid, setIsValid] = React.useState(false);
 
-  const y = container.clientHeight / 2 - (pos.R.y + pos.R.h / 2) * 1.5; // calculating y translate
-
-  //   let Xch = "-" + Math.abs(X);
-  //   let Ych = Y < 0 ? 0 : "+" + Y;
-
-  //   console.log("X: ", X, " Y :", Ych);
-
-  return {
-    x,
-    y,
+  const onRenderHeader = (): JSX.Element => {
+    return level !== 1 ? (
+      <div className={styles.panelBuilderTitle}>
+        <IconButton
+          onClick={() => navigateLevelUp()}
+          iconProps={{ iconName: "ChevronLeft" }}
+          styles={{ icon: { height: 20, fontSize: 30 } }}
+        />
+        <span
+          style={{ marginLeft: 10 }}
+        >{`Submenu builder for : ${levelTitle}`}</span>
+      </div>
+    ) : (
+      <span className={styles.panelBuilderTitle}>Menu builder</span>
+    );
   };
-};
 
-const getPositions = (officeId: string, styleId: string) => {
-  let pos: any = {};
+  const validate = (inputs: IInputsCollection): void => {
+    // const existingDataCollection = dataCollections.find(dC=> dC.uniqueId === .)
+    // validateCollections(inputs, )
 
-  pos.svg = Snap("svg").getBBox();
-
-  pos.g = getTransformer(styleId);
-
-  pos.R = Snap("g#" + officeId).getBBox();
-
-  pos.k = pos.svg.w / pos.g.w;
-
-  console.log(pos);
-
-  return pos;
-};
-
-export const getTransformer = (selector: string) => {
-  const transformStr = document.getElementById(selector).parentElement.style
-    .transform;
-
-  const transformArray = transformStr.split(" ");
-
-  const xPossiotion = transformArray[0].substring(
-    transformArray[0].indexOf("(") + 1,
-    transformArray[0].indexOf("p")
-  );
-  const yPossiotion = transformArray[1].substring(
-    0,
-    transformArray[1].indexOf("p")
-  );
-
-  const scale = transformArray[2].substring(
-    transformArray[2].indexOf("(") + 1,
-    transformArray[2].indexOf(")")
-  );
-
-  const gWidth = document.getElementById(selector).parentElement.clientWidth;
-  const gHeight = document.getElementById(selector).parentElement.clientHeight;
-
-  return {
-    w: gWidth,
-    h: gHeight,
-    x: parseInt(xPossiotion),
-    y: parseInt(yPossiotion),
-    scale: parseFloat(scale),
+    setIsValid(validateFields(inputs));
   };
+
+  const setDefaultValue = React.useCallback(() => {
+    fields.map((field) => {
+      if (field.type === "custom") {
+        if (
+          inputFormValuesCollection[field.id] &&
+          !inputFormValuesCollection[field.id].value
+        ) {
+          inputFormValuesCollection[field.id].value = field.setDefaultValue();
+          onChangeInputFieldValue(inputFormValuesCollection);
+        }
+      }
+    });
+  }, [inputFormValuesCollection]);
+
+  React.useEffect(() => {
+    validate(inputFormValuesCollection);
+    setDefaultValue();
+  }, []);
+
+  React.useEffect(() => {
+    onWebPartPropsChanged(dataCollections);
+  }, [dataCollections]);
+
+  return (
+    <div>
+      <DefaultButton
+        text={webPartPropertyBtnLabel}
+        onClick={() => setIsOpen(true)}
+      />
+      <Panel
+        isOpen={isOpen}
+        onDismiss={() => setIsOpen(false)}
+        type={PanelType.large}
+        closeButtonAriaLabel="Close"
+        onRenderHeader={onRenderHeader}
+      >
+        <div className={styles.menuDataCollectionPanelTable}>
+          <Separator />
+          <TableRender
+            isValid={isValid}
+            inputFormValuesCollection={inputFormValuesCollection}
+            dataCollections={getDataCollectionByLevel(
+              dataCollections,
+              level,
+              parentUniqueId
+            )}
+          />
+          <div className={styles.panelActions}>
+            <DefaultButton text="Cancel" onClick={() => setIsOpen(false)} />
+          </div>
+        </div>
+      </Panel>
+    </div>
+  );
 };

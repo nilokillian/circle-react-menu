@@ -28,9 +28,7 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
       (item) => item.extraInfoId === activeMenu.extraInfoId
     );
 
-    if (extraInfo) {
-      return extraInfo.manager.users;
-    }
+    return extraInfo ? extraInfo.manager.users : null;
   };
 
   const buttons = items.map((item: any) => {
