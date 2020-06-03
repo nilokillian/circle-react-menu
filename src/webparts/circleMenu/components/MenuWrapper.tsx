@@ -4,6 +4,7 @@ import { InnerCircle } from "./InnerCircle";
 // import { MenuToggle } from "./MenuToggle";
 import { WebPartPropsContext } from "../contexts/webpart-context/WebPartPropsContext";
 import { Guideline } from "./Guideline";
+import { Stack, IStackTokens, IStackStyles } from "office-ui-fabric-react";
 
 export interface IMenuWrapperProps {
   menuItems: any[];
@@ -13,6 +14,17 @@ export interface IMenuWrapperState {
   menuOpen: boolean;
   menuItems: any[];
 }
+
+const itemStyles: React.CSSProperties = {
+  alignItems: "center",
+  display: "flex",
+  height: 50,
+  justifyContent: "center",
+  width: 50,
+};
+
+const sectionStackTokens: IStackTokens = { childrenGap: 10 };
+const wrapStackTokens: IStackTokens = { childrenGap: 30 };
 
 export const MenuWrapper = (): JSX.Element => {
   const { menuItems, centreToCircle } = React.useContext(WebPartPropsContext);
@@ -70,8 +82,9 @@ export const MenuWrapper = (): JSX.Element => {
 
   return (
     <div>
-      <Guideline items={animatedMenuItems} />
-      <InnerCircle />
+      {/* <Guideline items={animatedMenuItems} /> */}
+
+      {/* <InnerCircle /> */}
       <MemoizedMenu centreToCircle={centreToCircle} items={animatedMenuItems} />
     </div>
   );

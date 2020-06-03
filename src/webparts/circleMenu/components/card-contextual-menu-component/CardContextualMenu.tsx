@@ -31,34 +31,36 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
     items.map((i) => {
       const currentlink: string = i.url;
 
-      if (currentlink.indexOf(tenantUri) > -1) {
-        checkRemoteWebPermissions(i.url, ctx)
-          .then((res) => {
-            if (res.value) {
-              tempArr.push({
-                key: i.title,
-                text: i.title,
-                href: i.url,
-              });
+      // if (currentlink.indexOf(tenantUri) > -1) {
+      //   checkRemoteWebPermissions(i.url, ctx)
+      //     .then((res) => {
+      //       if (res.value) {
+      //         tempArr.push({
+      //           key: i.title,
+      //           text: i.title,
+      //           href: i.url,
+      //         });
 
-              tempArr.push({
-                key: "divider_1",
-                itemType: ContextualMenuItemType.Divider,
-              });
-            }
-          })
-          .catch((err) => console.log(err));
-      } else {
-        tempArr.push({
-          key: i.title,
-          text: i.title,
-          href: i.url,
-        });
-        tempArr.push({
-          key: "divider_1",
-          itemType: ContextualMenuItemType.Divider,
-        });
-      }
+      //         tempArr.push({
+      //           key: "divider_1",
+      //           itemType: ContextualMenuItemType.Divider,
+      //         });
+      //       }
+      //     })
+      //     .catch((err) => console.log(err));
+      // } else {
+      tempArr.push({
+        key: i.title,
+        text: i.title,
+        href: i.url,
+        target: "_blank",
+        ["data-interception"]: "off",
+      });
+      tempArr.push({
+        key: "divider_1",
+        itemType: ContextualMenuItemType.Divider,
+      });
+      //   }
     });
 
     return tempArr;
