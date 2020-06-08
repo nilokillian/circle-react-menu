@@ -14,6 +14,7 @@ export const PersonaComponent: React.FC<IPersonaComponentProps> = ({
   persona,
 }): JSX.Element => {
   const getImageInitials = (): string => {
+    if (persona.length < 1) return "N N";
     let initials = persona[0].displayName.split(" ")[0].charAt(0);
     initials += " " + persona[0].displayName.split(" ")[1].charAt(0);
     return initials;
@@ -21,23 +22,21 @@ export const PersonaComponent: React.FC<IPersonaComponentProps> = ({
 
   const personaPropsMapper = (): IPersonaSharedProps => {
     return {
-      imageUrl: persona[0].imageUrl ? persona[0].imageUrl : "",
+      imageUrl: persona[0] ? persona[0].imageUrl : "",
       imageInitials: getImageInitials(),
-      text: persona[0].displayName,
-      secondaryText: persona[0].jobTitle,
+      text: persona[0] ? persona[0].displayName : "Not set",
+      secondaryText: persona[0] ? persona[0].jobTitle : "Not set",
     };
   };
 
   return (
-    <React.Fragment>
-      <Persona
-        {...personaPropsMapper()}
-        size={PersonaSize.extraLarge}
-        styles={{
-          root: { margin: 5 },
-          primaryText: { fontSize: 16, fontWeight: 500 },
-        }}
-      />
-    </React.Fragment>
+    <Persona
+      {...personaPropsMapper()}
+      size={PersonaSize.extraLarge}
+      styles={{
+        root: { margin: 5 },
+        primaryText: { fontSize: 16, fontWeight: 500 },
+      }}
+    />
   );
 };

@@ -7,7 +7,9 @@ import { ICardProps } from "./ICardProps";
 
 export const Card: React.FC<ICardProps> = React.memo(({ item, persona }) => {
   const mergePersonaProps = () => {
-    return persona.map((p) => ({ ...p, imageUrl: item.imageUrl }));
+    return persona
+      ? persona.map((p) => ({ ...p, imageUrl: item.imageUrl }))
+      : [];
   };
 
   return (
@@ -19,7 +21,7 @@ export const Card: React.FC<ICardProps> = React.memo(({ item, persona }) => {
       </Stack>
 
       <Stack>
-        <Stack horizontal horizontalAlign="end" wrap>
+        <Stack horizontal horizontalAlign="center" wrap>
           <CardContextualMenu {...item} />
         </Stack>
       </Stack>

@@ -1,0 +1,15 @@
+.guideline {
+  position: absolute;
+  top: 1px;
+  z-index: 300;
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .iconTitle {
+    margin-left: 10px;
+  }
+}

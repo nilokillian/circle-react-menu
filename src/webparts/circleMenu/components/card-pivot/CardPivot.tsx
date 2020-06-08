@@ -27,6 +27,7 @@ export const CardPivot: React.FC<ICardPivotProps> = ({ divisionId }) => {
           >
             <Stack verticalAlign="start" styles={{ root: { fontSize: 12 } }}>
               {divisionId &&
+                data[divisionId] &&
                 data[divisionId].statisticData.map((i) => (
                   <>
                     <strong>{i.title}</strong>

@@ -1,6 +1,6 @@
 .circleMenu {
   .container {
-    height: 400px;
+    height: 600px;
     padding: 0px;
     margin: 0px;
     width: auto;
@@ -8,22 +8,6 @@
     //max-width: 700px;
     margin: 0px;
     // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
-
-    .guideline {
-      position: absolute;
-      top: 3px;
-      z-index: 300;
-
-      .iconContainer {
-        display: flex;
-        align-items: center;
-        margin-bottom: 4px;
-      }
-
-      .iconTitle {
-        margin-left: 10px;
-      }
-    }
 
     .menuBackground {
       height: 100%;

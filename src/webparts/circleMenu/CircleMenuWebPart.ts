@@ -7,7 +7,7 @@ import {
   PropertyPaneSlider,
   PropertyPaneHorizontalRule,
 } from "@microsoft/sp-webpart-base";
-import { CircleMenuApp } from "./components/CircleMenuApp";
+import { CircleMenuApp } from "./components/circle-menu-app-component/CircleMenuApp";
 import { ICircleMenuAppProps } from "./interfaces/ICircleMenuAppProps";
 import { ICircleMenuWebPartProps } from "./interfaces/ICircleMenuWebPartProps";
 import { initializeIcons } from "@uifabric/icons";

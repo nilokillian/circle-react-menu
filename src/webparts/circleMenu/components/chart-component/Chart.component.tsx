@@ -28,7 +28,7 @@ export const ChartComponent: React.FC<IChartComponentProps> = ({ dataId }) => {
 
   return (
     <>
-      {dataId && (
+      {dataId && data[dataId] && (
         <ChartControl
           type={ChartType.Pie}
           data={data[dataId].chartData}
