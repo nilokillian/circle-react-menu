@@ -61,7 +61,7 @@ export const DetailsCalloutComponent: React.FC<IDetailsCalloutComponentProps> = 
           text="Core Functions"
           styles={{
             menuIcon: { display: "none" },
-            root: { width: 140, marginBottom: 4, fontSize: 12 },
+            root: { minWidth: 200, marginBottom: 4, fontSize: 12 },
           }}
           onClick={() => onHandleCallOut("coreFunctions")}
         />
@@ -73,13 +73,13 @@ export const DetailsCalloutComponent: React.FC<IDetailsCalloutComponentProps> = 
           text="Key Metrics"
           styles={{
             menuIcon: { display: "none" },
-            root: { width: 140, marginBottom: 4, fontSize: 12 },
+            root: { minWidth: 200, marginBottom: 4, fontSize: 12 },
           }}
         />
       </div>
       {callOutOpen && (
         <Callout
-          style={{ width: 300 }}
+          style={{ minWidth: 300 }}
           gapSpace={0}
           target={
             currentCalloutName === "coreFunctions"
@@ -88,7 +88,7 @@ export const DetailsCalloutComponent: React.FC<IDetailsCalloutComponentProps> = 
           }
           isBeakVisible={false}
           onDismiss={() => setCallOutOpen(false)}
-          directionalHint={DirectionalHint.rightCenter}
+          directionalHint={DirectionalHint.topCenter}
           setInitialFocus={true}
           coverTarget={true}
         >

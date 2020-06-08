@@ -11,7 +11,7 @@ import {
 import { checkRemoteWebPermissions } from "../../utils/api";
 import { IAnimatedMwnuItem } from "../../interfaces/IAnimatedMwnuItem";
 import { DetailsCalloutComponent } from "../DetailsCalloutComponent";
-import { cardContextualMenuBtnStyle } from "../../styles/fabricStyles";
+
 import styles from "./CardContextualMenuStyle.module.scss";
 
 export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
@@ -70,7 +70,7 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
     () => ({
       items: composeItems(props.subMenu),
       shouldFocusOnMount: true,
-      styles: { list: { width: 140 }, container: { width: 140 } },
+      styles: { root: { width: 200 } },
       contextualMenuItemAs: (menuItemProps: IContextualMenuItemProps) => (
         <div>{menuItemProps.item.text}</div>
       ),
@@ -84,7 +84,10 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
       <DefaultButton
         text="Links"
         menuProps={menuProps}
-        styles={cardContextualMenuBtnStyle}
+        styles={{
+          menuIcon: { display: "none" },
+          root: { minWidth: 200, fontSize: 12 },
+        }}
       />
     </div>
   );

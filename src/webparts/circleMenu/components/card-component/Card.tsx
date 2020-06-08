@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Stack, Separator } from "office-ui-fabric-react";
+import { Stack } from "office-ui-fabric-react";
 import { CardContextualMenu } from "../card-contextual-menu-component/CardContextualMenu";
 import { PersonaComponent } from "../persona-component/PersonaComponent";
 import { CardPivot } from "../card-pivot/CardPivot";
@@ -12,12 +12,19 @@ export const Card: React.FC<ICardProps> = React.memo(({ item, persona }) => {
 
   return (
     <>
-      <Stack horizontal horizontalAlign="start">
-        <PersonaComponent persona={mergePersonaProps()} />
-        <CardContextualMenu {...item} />
+      <Stack>
+        <Stack horizontal horizontalAlign="start" wrap>
+          <PersonaComponent persona={mergePersonaProps()} />
+        </Stack>
       </Stack>
-      <Separator />
-      <CardPivot />
+
+      <Stack>
+        <Stack horizontal horizontalAlign="end" wrap>
+          <CardContextualMenu {...item} />
+        </Stack>
+      </Stack>
+
+      <CardPivot divisionId={item.extraInfoId} />
     </>
   );
 });

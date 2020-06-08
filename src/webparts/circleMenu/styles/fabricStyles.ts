@@ -19,11 +19,6 @@ export const cardContextualManuStackStyle = (): IStylesFunctionOrObject<
   IComponentStyles<IStackSlots>
 > => ({ root: { marginTop: 10 } });
 
-export const cardContextualMenuBtnStyle: IButtonStyles = {
-  menuIcon: { display: "none" },
-  root: { width: 140, fontSize: 12 },
-};
-
 export const tooltipStyles: Partial<ITooltipHostStyles> = {
   root: { display: "flex", margin: "auto" },
 };
@@ -38,10 +33,11 @@ export const menuItemsCalloutStyle = mergeStyleSets({
     height: 32,
   },
   callout: {
-    maxWidth: 600,
+    width: 350,
   },
   header: {
-    padding: "10px 5px 5px",
+    padding: "20px 10px 10px 5px",
+
     textAlign: "center",
     fontSize: 15,
     fontWeight: 300,
@@ -54,7 +50,7 @@ export const menuItemsCalloutStyle = mergeStyleSets({
     },
   ],
   inner: {
-    height: "100%",
+    height: 420,
     padding: "0 14px 10px",
   },
   actions: {

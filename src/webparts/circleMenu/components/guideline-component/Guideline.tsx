@@ -1,12 +1,11 @@
 import * as React from "react";
-import styles from "../styles/CircleMenu.module.scss";
+import styles from "../../styles/CircleMenu.module.scss";
 import { Icon } from "office-ui-fabric-react/lib/Icon";
+import { WebPartPropsContext } from "../../contexts/webpart-context/WebPartPropsContext";
 
-export interface IGuideline {
-  items: any[];
-}
+export const Guideline: React.FC = (): JSX.Element => {
+  const { menuItems: items } = React.useContext(WebPartPropsContext);
 
-export const Guideline: React.FC<IGuideline> = ({ items }): JSX.Element => {
   return (
     <div className={styles.guideline}>
       {items.map((item) => (

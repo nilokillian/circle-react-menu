@@ -1,5 +1,13 @@
 import * as React from "react";
-import { Icon, Callout, TooltipHost, Separator } from "office-ui-fabric-react";
+import {
+  Icon,
+  Callout,
+  TooltipHost,
+  Separator,
+  Stack,
+  IconButton,
+  IIconProps,
+} from "office-ui-fabric-react";
 import { Card } from "../card-component/Card";
 import { DivisionContext } from "../../contexts/division-context/DivisionsContext";
 import { IAnimatedMwnuItem } from "../../interfaces/IAnimatedMwnuItem";
@@ -21,7 +29,7 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
   );
   const btnRef = React.useRef();
 
-  console.log("divisionContext", divisionContext);
+  // console.log("divisionContext", divisionContext);
 
   const getPersona = (): IUser[] | null => {
     const extraInfo = divisionContext.find(
@@ -64,7 +72,7 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
       </div>
     );
   });
-
+  const icon: IIconProps = { iconName: "Cancel" };
   return (
     <div
       ref={btnRef}
@@ -84,13 +92,25 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
           onDismiss={() => setCallOutVis(false)}
           setInitialFocus={true}
         >
-          <div className={menuItemsCalloutStyle.header}>
-            <Separator>{activeMenu.title}</Separator>
-          </div>
+          <Stack>
+            <div className={menuItemsCalloutStyle.header}>
+              <IconButton
+                onClick={() => setCallOutVis(false)}
+                iconProps={icon}
+                title="close"
+                styles={{
+                  root: { position: "absolute", marginLeft: 145, top: 0 },
+                }}
+              />
+              <Separator styles={{ root: { padding: 0 } }}>
+                {activeMenu.title}
+              </Separator>
+            </div>
 
-          <div className={menuItemsCalloutStyle.inner}>
-            <Card item={activeMenu} persona={getPersona()} />
-          </div>
+            <div className={menuItemsCalloutStyle.inner}>
+              <Card item={activeMenu} persona={getPersona()} />
+            </div>
+          </Stack>
         </Callout>
       )}
     </div>

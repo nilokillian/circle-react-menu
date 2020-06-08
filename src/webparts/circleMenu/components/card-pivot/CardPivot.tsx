@@ -1,27 +1,24 @@
 import * as React from "react";
-import { Label, ILabelStyles } from "office-ui-fabric-react/lib/Label";
 import { Pivot, PivotItem } from "office-ui-fabric-react/lib/Pivot";
-import { IStyleSet } from "office-ui-fabric-react/lib/Styling";
 import { Stack } from "office-ui-fabric-react";
+import { ChartComponent } from "../chart-component/Chart.component";
+import data from "../chart-component/mockData";
 
-const labelStyles: Partial<IStyleSet<ILabelStyles>> = {
-  root: { marginTop: 10 },
-};
+export interface ICardPivotProps {
+  divisionId: string;
+}
 
-export const CardPivot: React.FC = () => {
+export const CardPivot: React.FC<ICardPivotProps> = ({ divisionId }) => {
   return (
-    <Pivot
-      aria-label="Card Pivot"
-      styles={{ itemContainer: { marginTop: 10 } }}
-    >
+    <Pivot aria-label="Card Pivot" styles={{ text: { fontSize: 14 } }}>
       <PivotItem
-        headerText="Report 1"
+        headerText="Statistic"
         headerButtonProps={{
           "data-order": 1,
           "data-title": "My Files Title",
         }}
       >
-        <div className="pivotItemContainer" style={{ height: 120 }}>
+        <div className="pivotItemContainer" style={{ height: 140 }}>
           <Stack
             horizontal
             horizontalAlign="start"
@@ -29,6 +26,15 @@ export const CardPivot: React.FC = () => {
             styles={{ root: { marginTop: 10 } }}
           >
             <Stack verticalAlign="start" styles={{ root: { fontSize: 12 } }}>
+              {divisionId &&
+                data[divisionId].statisticData.map((i) => (
+                  <>
+                    <strong>{i.title}</strong>
+                    {i.value}
+                  </>
+                ))}
+            </Stack>
+            {/* <Stack verticalAlign="start" styles={{ root: { fontSize: 12 } }}>
               <strong>ACTIVE REQUESTS</strong> 562
               <strong>RESOLVED</strong> 182
               <strong>ON HOLD</strong> 562
@@ -38,13 +44,13 @@ export const CardPivot: React.FC = () => {
               <strong>TOTAL USERS</strong> 5045
               <strong>TOTAL LAPTOPS</strong> 562
               <strong>TOTAL SERVERS</strong> 182s
-            </Stack>
+            </Stack> */}
           </Stack>
         </div>
       </PivotItem>
-      <PivotItem headerText="Statistic">
-        <div className="pivotItemContainer" style={{ height: 120 }}>
-          <Label styles={labelStyles}>Graphic</Label>
+      <PivotItem headerText="Chart">
+        <div className="pivotItemContainer" style={{ height: 140 }}>
+          <ChartComponent dataId={divisionId} />
         </div>
       </PivotItem>
     </Pivot>

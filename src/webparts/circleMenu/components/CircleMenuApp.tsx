@@ -4,6 +4,7 @@ import { ICircleMenuAppProps } from "../interfaces/ICircleMenuAppProps";
 import { MenuWrapper } from "./MenuWrapper";
 import { WebPartPropsContextProvider } from "../contexts/webpart-context/WebPartPropsContext";
 import { DivisionContextProvider } from "../contexts/division-context/DivisionsContext";
+import { Guideline } from "./guideline-component/Guideline";
 
 export const CircleMenuApp: React.FC<ICircleMenuAppProps> = (props) => {
   const guidelineRef = React.useRef(null);
@@ -25,13 +26,8 @@ export const CircleMenuApp: React.FC<ICircleMenuAppProps> = (props) => {
             className={styles.container}
             style={{ height: guideLineHeight }}
           >
-            <div id="guideline" style={{ zIndex: 3000, position: "absolute" }}>
-              <ul>
-                <li>werwer</li>
-                <li>werwer</li>
-                <li>werwer</li>
-                <li>werwerwer</li>
-              </ul>
+            <div id="guideline" style={{ zIndex: 300, position: "absolute" }}>
+              <Guideline />
             </div>
             <MenuWrapper />
           </div>

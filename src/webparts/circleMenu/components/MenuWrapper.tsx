@@ -3,7 +3,7 @@ import { MemoizedMenu } from "./Menu";
 import { InnerCircle } from "./InnerCircle";
 // import { MenuToggle } from "./MenuToggle";
 import { WebPartPropsContext } from "../contexts/webpart-context/WebPartPropsContext";
-import { Guideline } from "./Guideline";
+import { Guideline } from "./guideline-component/Guideline";
 import { Stack, IStackTokens, IStackStyles } from "office-ui-fabric-react";
 
 export interface IMenuWrapperProps {
@@ -82,9 +82,7 @@ export const MenuWrapper = (): JSX.Element => {
 
   return (
     <div>
-      {/* <Guideline items={animatedMenuItems} /> */}
-
-      {/* <InnerCircle /> */}
+      <InnerCircle />
       <MemoizedMenu centreToCircle={centreToCircle} items={animatedMenuItems} />
     </div>
   );
