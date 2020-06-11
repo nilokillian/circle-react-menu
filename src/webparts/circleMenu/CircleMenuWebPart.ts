@@ -1,3 +1,6 @@
+import "core-js/modules/es6.array.find";
+import "core-js/es6/array";
+import "es6-map/implement";
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import { Version } from "@microsoft/sp-core-library";

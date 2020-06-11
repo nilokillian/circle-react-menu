@@ -20,7 +20,7 @@ export const cardContextualManuStackStyle = (): IStylesFunctionOrObject<
 > => ({ root: { marginTop: 10 } });
 
 export const tooltipStyles: Partial<ITooltipHostStyles> = {
-  root: { display: "flex", margin: "auto" },
+  root: { display: "flex", margin: "auto", marginTop: 27 },
 };
 
 export const menuItemsCalloutStyle = mergeStyleSets({
@@ -37,10 +37,10 @@ export const menuItemsCalloutStyle = mergeStyleSets({
   },
   header: {
     padding: "20px 10px 10px 5px",
-
     textAlign: "center",
     fontSize: 15,
     fontWeight: 300,
+    marginTop: 10,
   },
   title: [
     theme.fonts.xLarge,

@@ -99,7 +99,11 @@ export const MenuItems = ({ centreToCircle, items, open }) => {
                 iconProps={icon}
                 title="close"
                 styles={{
-                  root: { position: "absolute", marginLeft: 145, top: 0 },
+                  root: {
+                    position: "absolute",
+                    marginLeft: 145,
+                    top: 0,
+                  },
                 }}
               />
               <Separator styles={{ root: { padding: 0 } }}>
