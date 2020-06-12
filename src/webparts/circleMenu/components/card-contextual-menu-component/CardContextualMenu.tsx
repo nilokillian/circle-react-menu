@@ -55,6 +55,7 @@ export const CardContextualMenu: React.FC<IAnimatedMwnuItem> = (
         href: i.url,
         target: "_blank",
         ["data-interception"]: "off",
+        style: { fontSize: 12 },
       });
       tempArr.push({
         key: "divider_1",
